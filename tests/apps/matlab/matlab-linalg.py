@@ -30,7 +30,7 @@ class MatlabLinalgBaseTest(rfm.RunOnlyRegressionTest):
         self.executable = 'cat'
         self.executable_opts = ['linalg.m | matlab -nodesktop -nosplash']
         self.num_tasks_per_node = 1
-        self.tags = {'apps', 'matlab', 'performance'}
+        self.tags = {'apps', 'matlab', 'performance', 'vsc'}
         self.maintainers = ['Lewih']
 
 
@@ -40,6 +40,7 @@ class MatlabLinalgTest(MatlabLinalgBaseTest):
         super().__init__()
         self.valid_systems = ['leibniz:single-node',
                               'vaughan:single-node',
+                              'breniac:single-node',
                               'hydra:single-node',
                               'genius:single-node']
 
@@ -53,6 +54,11 @@ class MatlabLinalgTest(MatlabLinalgBaseTest):
                 'dot': (0.28, None, 0.10, 'seconds'),
                 'cholesky': (0.06, None, 0.10, 'seconds'),
                 'lu': (0.18, None, 0.10, 'seconds'),
+            },
+            'breniac:single-node': {
+                'dot': (0.28, None, 0.10, 'seconds'),
+                'cholesky': (0.06, None, 0.10, 'seconds'),
+                'lu': (0.24, None, 0.10, 'seconds'),
             },
             'genius:single-node': {
                 'dot': (0.14, None, 0.10, 'seconds'),
@@ -68,7 +74,7 @@ class MatlabLinalgTest(MatlabLinalgBaseTest):
 
     @run_after('setup')
     def set_num_cpus(self):
-        if self.current_system.name == 'leibniz':
+        if self.current_system.name in ['leibniz', 'breniac']:
             self.num_cpus_per_task = 28
         elif self.current_system.name == 'vaughan':
             self.num_cpus_per_task = 32

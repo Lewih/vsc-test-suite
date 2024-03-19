@@ -18,5 +18,5 @@ Log files and output will be saved in $HOME/reframe
 
 ## Requirements 
 
-- Reframe 3.10.1 installed as a module
+- Reframe 4.6.1 installed as a module
 - Python3

@@ -12,21 +12,22 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
     time_limit = '10m'
     prerun_cmds = ['git clone https://github.com/wilicc/gpu-burn.git', 'cd gpu-burn', 'make']
     executable = '--output=rfm_GPUBURN_nvidia_node-%N.out ./gpu_burn 20'
-    tags = {"gpu", "burn", "performance"}
+    tags = {"gpu", "burn", "performance", "vsc"}
     num_devices = 0
     num_tasks_per_node = 1
+    # no upper bound, keep lower bound for reference
     reference = {
         'vaughan:nvidia': {
-            'device0_nvam1': (17339.0, -0.05, 0.05, 'Gflop/s'),
-            'device1_nvam1': (17336.0, -0.05, 0.05, 'Gflop/s'),
-            'device2_nvam1': (17340.0, -0.05, 0.05, 'Gflop/s'),
-            'device3_nvam1': (17335.0, -0.05, 0.05, 'Gflop/s'),
+            'nvam1_device0': (17339.0, -0.05, None, 'Gflop/s'),
+            'nvam1_device1': (17336.0, -0.05, None, 'Gflop/s'),
+            'nvam1_device2': (17340.0, -0.05, None, 'Gflop/s'),
+            'nvam1_device3': (17335.0, -0.05, None, 'Gflop/s'),
         },
         'leibniz:nvidia': {
-            'device0_nvpa1': (7412.0, -0.05, 0.05, 'Gflop/s'),
-            'device1_nvpa1': (7412.0, -0.05, 0.05, 'Gflop/s'),
-            'device0_nvpa2': (7412.0, -0.05, 0.05, 'Gflop/s'),
-            'device1_nvpa2': (7412.0, -0.05, 0.05, 'Gflop/s'),
+            'nvpa1_device0': (7412.0, -0.05, None, 'Gflop/s'),
+            'nvpa1_device1': (7412.0, -0.05, None, 'Gflop/s'),
+            'nvpa2_device0': (7412.0, -0.05, None, 'Gflop/s'),
+            'nvpa2_device1': (7412.0, -0.05, None, 'Gflop/s'),
         }
     }
 
@@ -47,22 +48,23 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
         result = True
         for n in sorted(self.job.nodelist):
             node = n.split('.')[0]
-            result = sn.and_(sn.and_(sn.assert_found(r'OK', f'gpu-burn/rfm_GPUBURN_nvidia_node-{node}.out'), sn.assert_not_found(r'FAULTY', f'gpu-burn/rfm_GPUBURN_nvidia_node-{node}.out')), result)
-
+            result = sn.and_(sn.and_(sn.assert_found(r'OK', self.stagedir+f'/gpu-burn/rfm_GPUBURN_nvidia_node-{node}.out'), sn.assert_not_found(r'FAULTY',  self.stagedir+f'/gpu-burn/rfm_GPUBURN_nvidia_node-{node}.out')), result)
         return result
 
     @performance_function('Gflop/s')
     def get_gflops(self, device=0, node=None):
-        return sn.extractsingle(r'\((?P<gflops>\S+) Gflop/s\)', f'gpu-burn/rfm_GPUBURN_nvidia_node-{node}.out', 'gflops', float, item=(-device-1))
+        # take starting from item -1 (last match) 
+        return sn.extractsingle(r'\((?P<gflops>\S+) Gflop/s\)',  self.stagedir+f'/gpu-burn/rfm_GPUBURN_nvidia_node-{node}.out', 'gflops', float, item=(-device-1))
 
     @run_before('performance')
     def set_perf_variables(self):
         '''Build the dictionary with all the performance variables.'''
         self.perf_variables = {}
-
-        for n in self.job.nodelist:
-            node =n.split('.')[0]
-            device = 0
-            for x in range(self.num_devices):
-                self.perf_variables[f'device{device}_{node}'] = self.get_gflops(device=self.num_devices-device, node=node)
-                device += 1
+        # for dry runs, check if nodelist is empty
+        if self.job.nodelist:
+            for n in self.job.nodelist:
+                node =n.split('.')[0]
+                device = 0
+                for x in range(self.num_devices):
+                    self.perf_variables[f'{node}_device{self.num_devices-device-1}'] = self.get_gflops(device=self.num_devices-device, node=node)
+                    device += 1

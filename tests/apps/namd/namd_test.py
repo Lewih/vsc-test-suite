@@ -22,7 +22,7 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
 
         self.maintainers = ['Lewih']
 
-        self.tags = {'apps', 'namd', 'performance'}
+        self.tags = {'apps', 'namd', 'performance', 'vsc'}
         self.tags.add(f'{self.num_nodes}nodes')
 
     @run_before('run')
@@ -109,6 +109,7 @@ class Namd_NotSMP_CPUTest(NamdBaseTest):
 
         self.valid_systems = ['leibniz:single-node',
                               'vaughan:single-node',
+                              'breniac:single-node',
                               'genius:single-node',
                               'hydra:single-node']
 
@@ -119,18 +120,21 @@ class Namd_NotSMP_CPUTest(NamdBaseTest):
             '1': {
                 'leibniz:single-node': {'days_ns': (0.347779, None, 0.05, 'days/ns')},
                 'vaughan:single-node': {'days_ns': (0.188093, None, 0.05, 'days/ns')},
+                'breniac:single-node': {'days_ns': (0.8281605, None, 0.05, 'days/ns')},
                 'hydra:single-node': {'days_ns': (0.202701, None, 0.05, 'days/ns')},
                 'genius:single-node': {'days_ns': (0.210896, None, 0.05, 'days/ns')},
             },
             '2': {
                 'leibniz:single-node': {'days_ns': (0.1782715, None, 0.05, 'days/ns')},
                 'vaughan:single-node': {'days_ns': (0.09856985, None, 0.05, 'days/ns')},
+                'breniac:single-node': {'days_ns': (0.1459575, None, 0.05, 'days/ns')},
                 'hydra:single-node': {'days_ns': (0.1099565, None, 0.05, 'days/ns')},
                 'genius:single-node': {'days_ns': (0.1151855, None, 0.05, 'days/ns')},
             },
             '4': {
                 'leibniz:single-node': {'days_ns': (1.05726, None, 0.05, 'days/ns')},
                 'vaughan:single-node': {'days_ns': (0.5438339, None, 0.05, 'days/ns')},
+                'breniac:single-node': {'days_ns': (0.8281605, None, 0.05, 'days/ns')},
                 'hydra:single-node': {'days_ns': (0.5427335, None, 0.05, 'days/ns')},
                 'genius:single-node': {'days_ns': (0.565824, None, 0.05, 'days/ns')},
             },
@@ -144,7 +148,7 @@ class Namd_NotSMP_CPUTest(NamdBaseTest):
         configFile = self.download_material()
 
         # VSC specific config
-        if self.current_system.name == 'leibniz':
+        if self.current_system.name in ['leibniz', 'breniac']:
             self.num_cpus_per_task = 28
             self.modules = ['NAMD/2.14-verbs']
             launcher = 'charm_antwerp'

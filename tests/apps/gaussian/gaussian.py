@@ -16,10 +16,10 @@ class GaussianBaseTest(rfm.RunOnlyRegressionTest):
             'time': (
                 sn.extractsingle(
                 r'^real\t(?P<minutes>\S+)m\S+s',
-                'rfm_GaussianCPUTest_job.err', 'minutes', float) + 
+                self.stderr, 'minutes', float) + 
                 sn.extractsingle(
                 r'^real\t\S+m(?P<seconds>\S+)s',
-                'rfm_GaussianCPUTest_job.err', 'seconds', float) / 60.0)
+                self.stderr, 'seconds', float) / 60.0)
         }
 
         self.maintainers = ['Lewih']
@@ -45,7 +45,7 @@ class GaussianCPUTest(GaussianBaseTest):
             },
             
         }
-        self.tags = {'apps', 'gaussian', 'performance'}
+        self.tags = {'apps', 'gaussian', 'performance', 'vsc'}
 
 
     @run_after('setup')

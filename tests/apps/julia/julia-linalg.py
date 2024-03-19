@@ -10,7 +10,7 @@ class JuliaLinalgBaseTest(rfm.RunOnlyRegressionTest):
         self.modules = ['Julia']
         self.executable = 'julia'
         self.executable_opts = ['linalg.jl']
-        self.tags = {'apps', 'julia', '1nodes', 'performance'}
+        self.tags = {'apps', 'julia', '1nodes', 'performance', 'vsc'}
         self.maintainers = ['Lewih']
         self.time_limit = '10m'
 
@@ -46,6 +46,11 @@ class JuliaLinalgTest(JuliaLinalgBaseTest):
                 'lu': (0.28, None, 0.1, 'seconds'),
             },
             'vaughan:single-node': {
+                'dot': (0.47, None, 0.1, 'seconds'),
+                'cholesky': (0.57, None, 0.1, 'seconds'),
+                'lu': (0.31, None, 0.1, 'seconds'),
+            },
+            'breniac:single-node': {
                 'dot': (0.47, None, 0.1, 'seconds'),
                 'cholesky': (0.57, None, 0.1, 'seconds'),
                 'lu': (0.31, None, 0.1, 'seconds'),
