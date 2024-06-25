@@ -37,60 +37,60 @@ class NumpyTest(rfm.RunOnlyRegressionTest):
         # self.use_multithreading = False
         self.tags = {'apps', 'python', 'numpy', 'performance', 'vsc'}
         self.maintainers = ['Lewih']
-        self.valid_systems = ['*:single-node']
+        self.valid_systems = ['*:default-node']
 
         self.reference = {
             # old references with intel
-            # 'vaughan:single-node': {
+            # 'vaughan:default-node': {
             #     'dot': (0.7, None, 0.10, 'seconds'),
             #     'svd': (0.6, None, 0.10, 'seconds'),
             #     'cholesky': (0.28, None, 0.10, 'seconds'),
             #     'eigendec': (7.0, None, 0.10, 'seconds'),
             #     'inv': (0.40, None, 0.10, 'seconds'),
             # },
-            # 'leibniz:single-node': {
+            # 'leibniz:default-node': {
             #     'dot': (0.72, None, 0.10, 'seconds'),
             #     'svd': (0.42, None, 0.10, 'seconds'),
             #     'cholesky': (0.1, None, 0.10, 'seconds'),
             #     'eigendec': (4.3, None, 0.10, 'seconds'),
             #     'inv': (0.25, None, 0.10, 'seconds'),
             # },
-            'vaughan:single-node': {
+            'vaughan:default-node': {
                 'dot': (0.84, None, 0.10, 'seconds'),
                 'svd': (1.48, None, 0.10, 'seconds'),
                 'cholesky': (0.57, None, 0.10, 'seconds'),
                 'eigendec': (13.06, None, 0.10, 'seconds'),
                 'inv': (0.73, None, 0.10, 'seconds'),
             },
-            'leibniz:single-node': {
+            'leibniz:default-node': {
                 'dot': (0.87, None, 0.10, 'seconds'),
                 'svd': (1.0, None, 0.10, 'seconds'),
                 'cholesky': (0.1, None, 0.10, 'seconds'),
                 'eigendec': (7, None, 0.10, 'seconds'),
                 'inv': (0.25, None, 0.10, 'seconds'),
             },
-            'breniac:single-node': {
+            'breniac:default-node': {
                 'dot': (0.7, None, 0.10, 'seconds'),
                 'svd': (0.81, None, 0.10, 'seconds'),
                 'cholesky': (0.28, None, 0.10, 'seconds'),
                 'eigendec': (7.0, None, 0.10, 'seconds'),
                 'inv': (0.40, None, 0.10, 'seconds'),
             },
-            'genius:single-node': {
+            'genius:default-node': {
                 'dot': (0.7, None, 0.10, 'seconds'),
                 'svd': (0.6, None, 0.10, 'seconds'),
                 'cholesky': (0.15, None, 0.10, 'seconds'),
                 'eigendec': (7.0, None, 0.10, 'seconds'),
                 'inv': (0.30, None, 0.10, 'seconds'),
             },
-            'hydra:single-node': {
+            'hydra:default-node': {
                 'dot': (0.42, None, 0.10, 'seconds'),
                 'svd': (0.64, None, 0.10, 'seconds'),
                 'cholesky': (0.14, None, 0.10, 'seconds'),
                 'eigendec': (5.20, None, 0.10, 'seconds'),
                 'inv': (0.24, None, 0.10, 'seconds'),
             },
-            'hortense:single-node': {
+            'hortense:default-node': {
                 'dot': (0.62, None, 0.10, 'seconds'),
                 'svd': (1.38, None, 0.10, 'seconds'),
                 'cholesky': (0.4, None, 0.10, 'seconds'),

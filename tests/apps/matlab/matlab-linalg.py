@@ -38,34 +38,34 @@ class MatlabLinalgBaseTest(rfm.RunOnlyRegressionTest):
 class MatlabLinalgTest(MatlabLinalgBaseTest):
     def __init__(self):
         super().__init__()
-        self.valid_systems = ['leibniz:single-node',
-                              'vaughan:single-node',
-                              'breniac:single-node',
-                              'hydra:single-node',
-                              'genius:single-node']
+        self.valid_systems = ['leibniz:default-node',
+                              'vaughan:default-node',
+                              'breniac:default-node',
+                              'hydra:default-node',
+                              'genius:default-node']
 
         self.reference = {
-            'leibniz:single-node': {
+            'leibniz:default-node': {
                 'dot': (0.34, None, 0.05, 'seconds'),
                 'cholesky': (0.05, None, 0.05, 'seconds'),
                 'lu': (0.18, None, 0.05, 'seconds'),
             },
-            'vaughan:single-node': {
+            'vaughan:default-node': {
                 'dot': (0.28, None, 0.10, 'seconds'),
                 'cholesky': (0.06, None, 0.10, 'seconds'),
                 'lu': (0.18, None, 0.10, 'seconds'),
             },
-            'breniac:single-node': {
+            'breniac:default-node': {
                 'dot': (0.28, None, 0.10, 'seconds'),
                 'cholesky': (0.06, None, 0.10, 'seconds'),
                 'lu': (0.24, None, 0.10, 'seconds'),
             },
-            'genius:single-node': {
+            'genius:default-node': {
                 'dot': (0.14, None, 0.10, 'seconds'),
                 'cholesky': (0.05, None, 0.10, 'seconds'),
                 'lu': (0.29, None, 0.10, 'seconds'),
             },
-            'hydra:single-node': {
+            'hydra:default-node': {
                 'dot': (0.14, None, 0.10, 'seconds'),
                 'cholesky': (0.05, None, 0.10, 'seconds'),
                 'lu': (0.20, None, 0.10, 'seconds'),

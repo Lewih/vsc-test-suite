@@ -8,7 +8,7 @@ os.environ["TEST_ENVAR_OUTSIDE"] = 'defined'
 @rfm.simple_test
 class JobCleanEnvTest(rfm.RunOnlyRegressionTest):
     descr = "test that job starts in a clean environment"
-    valid_systems = ["*:single-node"]
+    valid_systems = ["*:default-node"]
     valid_prog_environs = ["standard"]
     time_limit = '10m'
     num_tasks = 1
@@ -26,7 +26,7 @@ class JobCleanEnvTest(rfm.RunOnlyRegressionTest):
 @rfm.simple_test
 class JobSrunCopyEnvTest(rfm.RunOnlyRegressionTest):
     descr = "test that srun inside job copies the job environment into the task environment"
-    valid_systems = ["*:single-node"]
+    valid_systems = ["*:default-node"]
     valid_prog_environs = ["standard"]
     time_limit = '10m'
     num_tasks = 1

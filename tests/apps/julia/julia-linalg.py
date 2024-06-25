@@ -20,7 +20,7 @@ class JuliaLinalgTest(JuliaLinalgBaseTest):
     def __init__(self):
         super().__init__()
         self.descr = 'Test a few typical Julia LinAlg operations'
-        self.valid_systems = ['*:single-node']
+        self.valid_systems = ['*:default-node']
         self.num_tasks_per_node = 1
         self.num_cpus_per_task = 20
         self.tags.add('performance')
@@ -40,32 +40,32 @@ class JuliaLinalgTest(JuliaLinalgBaseTest):
                 self.stdout, 'lu', float),
         }
         self.reference = {
-            'leibniz:single-node': {
+            'leibniz:default-node': {
                 'dot': (0.30, None, 0.1, 'seconds'),
                 'cholesky': (0.22, None, 0.1, 'seconds'),
                 'lu': (0.28, None, 0.1, 'seconds'),
             },
-            'vaughan:single-node': {
+            'vaughan:default-node': {
                 'dot': (0.47, None, 0.1, 'seconds'),
                 'cholesky': (0.57, None, 0.1, 'seconds'),
                 'lu': (0.31, None, 0.1, 'seconds'),
             },
-            'breniac:single-node': {
+            'breniac:default-node': {
                 'dot': (0.47, None, 0.1, 'seconds'),
                 'cholesky': (0.57, None, 0.1, 'seconds'),
                 'lu': (0.31, None, 0.1, 'seconds'),
             },
-            'hortense:single-node': {
+            'hortense:default-node': {
                 'dot': (0.44, None, 0.1, 'seconds'),
                 'cholesky': (0.47, None, 0.1, 'seconds'),
                 'lu': (0.49, None, 0.1, 'seconds'),
             },
-            'hydra:single-node': {
+            'hydra:default-node': {
                 'dot': (0.15, None, 0.1, 'seconds'),
                 'cholesky': (0.22, None, 0.1, 'seconds'),
                 'lu': (0.30, None, 0.1, 'seconds'),
             },
-            'genius:single-node': {
+            'genius:default-node': {
                 'dot': (0.15, None, 0.1, 'seconds'),
                 'cholesky': (0.21, None, 0.1, 'seconds'),
                 'lu': (0.18, None, 0.1, 'seconds'),

@@ -29,18 +29,18 @@ class GaussianBaseTest(rfm.RunOnlyRegressionTest):
 class GaussianCPUTest(GaussianBaseTest):
     def __init__(self):
         super().__init__()
-        self.valid_systems = ['leibniz:single-node',
-                              'vaughan:single-node',
-                              'hydra:single-node']
+        self.valid_systems = ['leibniz:default-node',
+                              'vaughan:default-node',
+                              'hydra:default-node']
         self.reference = {
-            'leibniz:single-node': {
+            'leibniz:default-node': {
                 'time': (33.0, None, 0.05, 'minutes'),
 
             },
-            'vaughan:single-node': {
+            'vaughan:default-node': {
                 'time': (15.0, None, 0.05, 'minutes'),
             },
-            'hydra:single-node': {
+            'hydra:default-node': {
                 'time': (21.5, None, 0.05, 'minutes'),
             },
             

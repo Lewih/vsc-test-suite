@@ -5,7 +5,7 @@ import reframe.utility.sanity as sn
 @rfm.simple_test
 class VSCJobTest(rfm.RunOnlyRegressionTest):
     descr = "test running job"
-    valid_systems = ["*:single-node"]
+    valid_systems = ["*:default-node"]
     valid_prog_environs = ["standard"]
     time_limit = '10m'
     num_tasks = 1

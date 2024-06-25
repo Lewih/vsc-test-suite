@@ -1,4 +1,4 @@
-standard_partitions_tool_test = ["*:local", "*:single-node"]
+standard_partitions_tool_test = ["*:local", "*:default-node"]
 
 
 tools = {

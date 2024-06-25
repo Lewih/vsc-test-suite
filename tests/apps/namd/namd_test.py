@@ -60,23 +60,23 @@ class Namd_SMP_CPUTest(NamdBaseTest):
         self.tags.add('smp')
         self.time_limit = '20m'
 
-        self.valid_systems = ['leibniz:single-node',
-                              'vaughan:single-node']
+        self.valid_systems = ['leibniz:default-node',
+                              'vaughan:default-node']
         self.valid_prog_environs = ['standard']
         super().__init__('cpu')
 
         self.scale_reference = {
             '1': {
-                'leibniz:single-node': {'days_ns': (0.345, None, 0.05, 'days/ns')},
-                'vaughan:single-node': {'days_ns': (0.1991375, None, 0.05, 'days/ns')},
+                'leibniz:default-node': {'days_ns': (0.345, None, 0.05, 'days/ns')},
+                'vaughan:default-node': {'days_ns': (0.1991375, None, 0.05, 'days/ns')},
             },
             '2': {
-                'leibniz:single-node': {'days_ns': (0.24671949, None, 0.05, 'days/ns')},
-                'vaughan:single-node': {'days_ns': (0.1601965, None, 0.05, 'days/ns')},
+                'leibniz:default-node': {'days_ns': (0.24671949, None, 0.05, 'days/ns')},
+                'vaughan:default-node': {'days_ns': (0.1601965, None, 0.05, 'days/ns')},
             },
             '4': {
-                'leibniz:single-node': {'days_ns': (1.317, None, 0.05, 'days/ns')},
-                'vaughan:single-node': {'days_ns': (0.7218169, None, 0.05, 'days/ns')},
+                'leibniz:default-node': {'days_ns': (1.317, None, 0.05, 'days/ns')},
+                'vaughan:default-node': {'days_ns': (0.7218169, None, 0.05, 'days/ns')},
             },
         }
         self.reference = self.scale_reference[self.num_nodes]
@@ -107,36 +107,36 @@ class Namd_NotSMP_CPUTest(NamdBaseTest):
     def __init__(self):
         self.time_limit = '20m'
 
-        self.valid_systems = ['leibniz:single-node',
-                              'vaughan:single-node',
-                              'breniac:single-node',
-                              'genius:single-node',
-                              'hydra:single-node']
+        self.valid_systems = ['leibniz:default-node',
+                              'vaughan:default-node',
+                              'breniac:default-node',
+                              'genius:default-node',
+                              'hydra:default-node']
 
         self.valid_prog_environs = ['standard']
         super().__init__('cpu')
 
         self.scale_reference = {
             '1': {
-                'leibniz:single-node': {'days_ns': (0.347779, None, 0.05, 'days/ns')},
-                'vaughan:single-node': {'days_ns': (0.188093, None, 0.05, 'days/ns')},
-                'breniac:single-node': {'days_ns': (0.8281605, None, 0.05, 'days/ns')},
-                'hydra:single-node': {'days_ns': (0.202701, None, 0.05, 'days/ns')},
-                'genius:single-node': {'days_ns': (0.210896, None, 0.05, 'days/ns')},
+                'leibniz:default-node': {'days_ns': (0.347779, None, 0.05, 'days/ns')},
+                'vaughan:default-node': {'days_ns': (0.188093, None, 0.05, 'days/ns')},
+                'breniac:default-node': {'days_ns': (0.8281605, None, 0.05, 'days/ns')},
+                'hydra:default-node': {'days_ns': (0.202701, None, 0.05, 'days/ns')},
+                'genius:default-node': {'days_ns': (0.210896, None, 0.05, 'days/ns')},
             },
             '2': {
-                'leibniz:single-node': {'days_ns': (0.1782715, None, 0.05, 'days/ns')},
-                'vaughan:single-node': {'days_ns': (0.09856985, None, 0.05, 'days/ns')},
-                'breniac:single-node': {'days_ns': (0.1459575, None, 0.05, 'days/ns')},
-                'hydra:single-node': {'days_ns': (0.1099565, None, 0.05, 'days/ns')},
-                'genius:single-node': {'days_ns': (0.1151855, None, 0.05, 'days/ns')},
+                'leibniz:default-node': {'days_ns': (0.1782715, None, 0.05, 'days/ns')},
+                'vaughan:default-node': {'days_ns': (0.09856985, None, 0.05, 'days/ns')},
+                'breniac:default-node': {'days_ns': (0.1459575, None, 0.05, 'days/ns')},
+                'hydra:default-node': {'days_ns': (0.1099565, None, 0.05, 'days/ns')},
+                'genius:default-node': {'days_ns': (0.1151855, None, 0.05, 'days/ns')},
             },
             '4': {
-                'leibniz:single-node': {'days_ns': (1.05726, None, 0.05, 'days/ns')},
-                'vaughan:single-node': {'days_ns': (0.5438339, None, 0.05, 'days/ns')},
-                'breniac:single-node': {'days_ns': (0.8281605, None, 0.05, 'days/ns')},
-                'hydra:single-node': {'days_ns': (0.5427335, None, 0.05, 'days/ns')},
-                'genius:single-node': {'days_ns': (0.565824, None, 0.05, 'days/ns')},
+                'leibniz:default-node': {'days_ns': (1.05726, None, 0.05, 'days/ns')},
+                'vaughan:default-node': {'days_ns': (0.5438339, None, 0.05, 'days/ns')},
+                'breniac:default-node': {'days_ns': (0.8281605, None, 0.05, 'days/ns')},
+                'hydra:default-node': {'days_ns': (0.5427335, None, 0.05, 'days/ns')},
+                'genius:default-node': {'days_ns': (0.565824, None, 0.05, 'days/ns')},
             },
         }
         self.reference = self.scale_reference[self.num_nodes]
