@@ -128,13 +128,6 @@ tools = {
         'minver': '5.8',
         'modname': 'Mercurial',
     },
-    'Python2':
-    {
-        'exe': 'python2',
-        'options': '2>&1',
-        'minver': '2.7.18',
-        'modname': 'Python/2.7.18-GCCcore-10.2.0',
-    },
     'Samba Client':
     {
         'exe': 'smbclient',
