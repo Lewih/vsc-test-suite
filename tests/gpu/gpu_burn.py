@@ -36,9 +36,11 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
         if self.current_system.name == 'vaughan':
             self.num_devices = 4
             self.num_tasks = 1
+            self.num_cpus_per_task = 64
         if self.current_system.name == 'leibniz':
             self.num_devices = 2
             self.num_tasks = 2
+            self.num_cpus_per_task = 28
         
         self.extra_resources = {'gpu': {'num_gpus': str(self.num_devices)}}
         self.descr = f'Nvidia gpu burn test on {self.current_system.name} with {self.num_devices} gpus'
