@@ -151,7 +151,7 @@ site_configuration = {
         {
             'name': 'vaughan',
             'descr': 'VSC Tier-2 Vaughan',
-            'hostnames': ['login[1-2].vaughan'],
+            'hostnames': ['.*vaughan'],
             'modules_system': 'lmod',
             'partitions': [
                 {
@@ -213,12 +213,12 @@ site_configuration = {
                     'access': [calcua_account_string_tier2, '-p ampere_gpu'],
                     'environs': ['CUDA', 'standard'],
                     'descr': 'Nvidia ampere node',
-                    'max_jobs': 1,
+                    'max_jobs': 10,
                     'launcher': 'srun',
                     'resources': [
                         {
                         'name': 'gpu',
-                        'options': ['--gres=gpu:{num_gpus}'],
+                        'options': ['--gpus-per-node={num_gpus}'],
                         },
                     ]
                 }
@@ -227,7 +227,7 @@ site_configuration = {
         {
             'name': 'leibniz',
             'descr': 'VSC Tier-2 Leibniz',
-            'hostnames': ['login[1-2].leibniz'],
+            'hostnames': ['.*leibniz'],
             'modules_system': 'lmod',
             'partitions': [
                 {
@@ -269,12 +269,12 @@ site_configuration = {
                     'access': [calcua_account_string_tier2, '-p pascal_gpu'],
                     'environs': ['CUDA', 'standard'],
                     'descr': 'Nvidia pascal nodes',
-                    'max_jobs': 2,
+                    'max_jobs': 5,
                     'launcher': 'srun',
                     'resources': [
                         {
                         'name': 'gpu',
-                        'options': ['--gres=gpu:{num_gpus}'],
+                        'options': ['--gpus-per-node={num_gpus}'],
                         },
                     ]
                 }
@@ -283,7 +283,7 @@ site_configuration = {
         {
             'name': 'breniac',
             'descr': 'VSC Tier-2 Breniac',
-            'hostnames': ['login.breniac'],
+            'hostnames': ['.*breniac'],
             'modules_system': 'lmod',
             'partitions': [
                 {
