@@ -5,7 +5,7 @@ import reframe.utility.sanity as sn
 @rfm.simple_test
 class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
     descr = 'GPU burn test on nvidia node'
-    valid_systems = ['+gpu +nvidia']
+    valid_systems = ['+gpu +nvidia -deprecated'] # only on non-deprecated gpu nodes, as the test is not expected to run on old gpu nodes
     valid_prog_environs = ['+cuda']
     # modules = []
     env_vars = {'CUDAPATH': '$EBROOTCUDA'}
@@ -19,6 +19,7 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
     executable = 'srun --output=rfm_GPUBURN_nvidia_node-%N.out ./gpu_burn 20'
     tags = {'gpu', 'burn', 'performance', 'vsc'}
     num_devices = 0
+    num_tasks = 0
     num_tasks_per_node = 1
     # no upper bound, keep lower bound for reference
     # reference = {
@@ -40,9 +41,7 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
     def set_options(self):
         extras = self.current_partition.extras
         self.num_devices = extras['num_gpus']
-        self.num_cpus_per_task = extras['num_cpus']
-        # one task per node;
-        self.num_tasks = self.num_tasks_per_node * extras['num_nodes']
+        self.num_cpus_per_task = extras['num_cpus']//self.num_devices
         self.extra_resources = {'gpu': {'num_gpus': str(self.num_devices)}} # gpus per node, not total gpus
         self.descr = (
             f'Nvidia gpu burn test on {self.current_system.name} '

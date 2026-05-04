@@ -1,8 +1,5 @@
 import grp
-import os, sys
-
-# use 'info' to log to syslog
-syslog_level = 'warning'
+import os
     
 # To run jobs on the kul cluster, you need to be a member of the following
 # vsc group
@@ -221,6 +218,7 @@ site_configuration = {
                 {
                     'name': 'nvidia',
                     'scheduler': 'slurm',
+                    'modules': [],
                     'access': [calcua_account_string_tier2, '-p ampere_gpu'],
                     'environs': ['CUDA', 'standard'],
                     'descr': 'Nvidia ampere node',
@@ -233,11 +231,12 @@ site_configuration = {
                         },
                     ],
                     'features': ['gpu', 'nvidia'],
-                    'extras': {'num_cpus': 64, 'num_gpus': 4, 'num_nodes': 1},
+                    'extras': {'num_cpus': 64, 'num_gpus': 4},
                 },
                 {
                     'name': 'amd',
                     'scheduler': 'slurm',
+                    'modules': [],
                     'access': [calcua_account_string_tier2, '-p arcturus_gpu'],
                     'environs': ['standard'],
                     'descr': 'AMD GPU node',
@@ -250,7 +249,7 @@ site_configuration = {
                         },
                     ],
                     'features': ['gpu', 'amd'],
-                    'extras': {'num_cpus': 64, 'num_gpus': 2, 'num_nodes': 2},
+                    'extras': {'num_cpus': 64, 'num_gpus': 2},
                 },
             ]
         },
@@ -314,6 +313,7 @@ site_configuration = {
                 {
                     'name': 'nvidia',
                     'scheduler': 'slurm',
+                    'modules': [],
                     'access': [calcua_account_string_tier2, '-p pascal_gpu'],
                     'environs': ['CUDA', 'standard'],
                     'descr': 'Nvidia pascal nodes',
@@ -326,7 +326,7 @@ site_configuration = {
                         },
                     ],
                     'features': ['gpu', 'nvidia', 'deprecated'],
-                    'extras': {'num_cpus': 28, 'num_gpus': 2, 'num_nodes': 2},
+                    'extras': {'num_cpus': 28, 'num_gpus': 2},
                 },
             ]
         },
@@ -413,7 +413,7 @@ site_configuration = {
          'modules': ['intel/2025a'], 'features': ['intel', 'mpi', 'fftw']},
 
         {'name': 'CUDA', 'cc': 'nvcc', 'cxx': 'nvcc',
-         'modules': ['CUDA/12.8.0'], 'features': ['cuda']}, # startinf with CUDA 13 some gpu architecture are deprecated
+         'modules': ['CUDA/12.8.0'], 'features': ['cuda']}, # starting with CUDA 13 some gpu architecture are deprecated
     ],
     'general': [
         {
@@ -423,7 +423,7 @@ site_configuration = {
     ],
     'logging': [
         {
-            'level': 'debug',
+            'level': 'info',
             'handlers': [
                 {
                     'type': 'stream',
