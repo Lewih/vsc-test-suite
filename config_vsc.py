@@ -3,11 +3,6 @@ import os, sys
 
 # use 'info' to log to syslog
 syslog_level = 'warning'
-
-# extend python path to external reframe dependencies
-reframe_path = os.environ.get('EBROOTREFRAME', '')
-if reframe_path:
-    sys.path.append(os.path.join(reframe_path, 'src'))
     
 # To run jobs on the kul cluster, you need to be a member of the following
 # vsc group
