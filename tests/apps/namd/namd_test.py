@@ -4,20 +4,24 @@ from reframe.core.backends import getlauncher
 
 
 class NamdBaseTest(rfm.RunOnlyRegressionTest):
-    num_nodes = parameter([1, 2, 4, ])
+    num_nodes = parameter([1, 2, 4])
 
     def __init__(self, arch):
-        self.descr = f'NAMD check on {arch}, number of nodes: {self.num_nodes}, apoa1 and stmv(4 nodes only)'
-        # fallback module load
+        self.descr = (
+            f'NAMD check on {arch}, number of nodes: {self.num_nodes}, '
+            f'apoa1 and stmv (4 nodes only)'
+        )
         self.modules = ['NAMD']
 
-        self.sanity_patterns = sn.assert_found(r'WRITING EXTENDED SYSTEM TO OUTPUT FILE AT STEP',
-                                               self.stdout)
+        self.sanity_patterns = sn.assert_found(
+            r'WRITING EXTENDED SYSTEM TO OUTPUT FILE AT STEP', self.stdout,
+        )
         self.perf_patterns = {
             'days_ns': sn.avg(sn.extractall(
                 r'Info: Benchmark time: \S+ CPUs \S+ '
                 r's/step (?P<days_ns>\S+) days/ns \S+ MB memory',
-                self.stdout, 'days_ns', float))
+                self.stdout, 'days_ns', float,
+            ))
         }
 
         self.maintainers = ['Lewih']
@@ -32,147 +36,75 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
     def download_material(self):
         if int(self.num_nodes) in {1, 2}:
             self.prerun_cmds = [
-                'wget https://www.ks.uiuc.edu/Research/namd/utilities/apoa1.zip', 'unzip apoa1.zip']
-            return "apoa1"
+                'wget https://www.ks.uiuc.edu/Research/namd/utilities/apoa1.zip',
+                'unzip apoa1.zip',
+            ]
+            return 'apoa1'
         if int(self.num_nodes) > 2:
             self.prerun_cmds = [
-                'wget https://www.ks.uiuc.edu/Research/namd/utilities/stmv.zip', 'unzip stmv.zip']
-            return "stmv"
+                'wget https://www.ks.uiuc.edu/Research/namd/utilities/stmv.zip',
+                'unzip stmv.zip',
+            ]
+            return 'stmv'
 
     def create_nodelist(self):
-        # scheduler commands
-        if self.current_system.name == 'genius':
-            # torque prerun commands
-            # not used, mantained for reference
-            self.prerun_cmds += ['echo Number of nodes: $PBS_NP',
-                                 'for node in `cat $PBS_NODEFILE`; do echo host $node >>mynodes; done']
-        else:
-            # slurm prerun commands
-            self.prerun_cmds += ['echo Number of nodes: $SLURM_NPROCS',
-                                 'for node in `scontrol show hostnames`; do echo host $node >>mynodes; done']
+        # slurm prerun commands to build a charm++ ++nodelist file
+        self.prerun_cmds += [
+            'echo Number of nodes: $SLURM_NPROCS',
+            'for node in `scontrol show hostnames`; do echo host $node >>mynodes; done',
+        ]
 
 
 @rfm.simple_test
 class Namd_SMP_CPUTest(NamdBaseTest):
-    # NAMD SMP CPU test
+    # NAMD SMP CPU test using charmrun
 
     def __init__(self):
-        self.tags.add('smp')
         self.time_limit = '20m'
 
-        self.valid_systems = ['leibniz:default-node',
-                              'vaughan:default-node']
-        self.valid_prog_environs = ['standard']
+        self.valid_systems = ['+cpu +default']
+        self.valid_prog_environs = ['+default']
         super().__init__('cpu')
-
-        # self.scale_reference = {
-        #     '1': {
-        #         'leibniz:default-node': {'days_ns': (0.345, None, 0.10, 'days/ns')},
-        #         'vaughan:default-node': {'days_ns': (0.1991375, None, 0.10, 'days/ns')},
-        #     },
-        #     '2': {
-        #         'leibniz:default-node': {'days_ns': (0.24671949, None, 0.10, 'days/ns')},
-        #         'vaughan:default-node': {'days_ns': (0.1601965, None, 0.10, 'days/ns')},
-        #     },
-        #     '4': {
-        #         'leibniz:default-node': {'days_ns': (1.317, None, 0.10, 'days/ns')},
-        #         'vaughan:default-node': {'days_ns': (0.7218169, None, 0.10, 'days/ns')},
-        #     },
-        # }
-        # self.reference = self.scale_reference[self.num_nodes]
+        # add the smp tag AFTER super().__init__() resets self.tags
+        self.tags.add('smp')
 
     @run_after('setup')
     def set_num_cpus(self):
         self.num_tasks = int(self.num_nodes)
+        self.num_cpus_per_task = self.current_partition.extras['num_cpus']
 
         configFile = self.download_material()
-
-        # VSC specific config
-        if self.current_system.name == 'leibniz':
-            self.num_cpus_per_task = 28
-            self.modules = ['NAMD/2.14-verbs-smp']
-        elif self.current_system.name == 'vaughan':
-            self.num_cpus_per_task = 64
-            self.modules = ['NAMD/2.14-verbs-smp']
-
         self.create_nodelist()
 
-        self.executable = f'charmrun ++p {self.num_cpus_per_task*self.num_tasks} ++ppn {self.num_cpus_per_task} ++nodelist mynodes $EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
+        ntasks_total = self.num_cpus_per_task * self.num_tasks
+        self.executable = (
+            f'charmrun ++p {ntasks_total} '
+            f'++ppn {self.num_cpus_per_task} ++nodelist mynodes '
+            f'$EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
+        )
 
 
 @rfm.simple_test
 class Namd_NotSMP_CPUTest(NamdBaseTest):
-    # NAMD notSMP CPU test
+    # NAMD non-SMP CPU test using charmrun
 
     def __init__(self):
         self.time_limit = '20m'
 
-        self.valid_systems = ['leibniz:default-node',
-                              'vaughan:default-node',
-                              'breniac:default-node',
-                              'genius:default-node',
-                              'hydra:default-node']
-
-        self.valid_prog_environs = ['standard']
+        self.valid_systems = ['+cpu +default']
+        self.valid_prog_environs = ['+default']
         super().__init__('cpu')
-
-        # self.scale_reference = {
-        #     '1': {
-        #         'leibniz:default-node': {'days_ns': (0.347779, None, 0.10, 'days/ns')},
-        #         'vaughan:default-node': {'days_ns': (0.188093, None, 0.10, 'days/ns')},
-        #         'breniac:default-node': {'days_ns': (0.8281610, None, 0.10, 'days/ns')},
-        #         'hydra:default-node': {'days_ns': (0.202701, None, 0.10, 'days/ns')},
-        #         'genius:default-node': {'days_ns': (0.210896, None, 0.10, 'days/ns')},
-        #     },
-        #     '2': {
-        #         'leibniz:default-node': {'days_ns': (0.1782715, None, 0.10, 'days/ns')},
-        #         'vaughan:default-node': {'days_ns': (0.09856985, None, 0.10, 'days/ns')},
-        #         'breniac:default-node': {'days_ns': (0.1459575, None, 0.10, 'days/ns')},
-        #         'hydra:default-node': {'days_ns': (0.1099565, None, 0.10, 'days/ns')},
-        #         'genius:default-node': {'days_ns': (0.1151855, None, 0.10, 'days/ns')},
-        #     },
-        #     '4': {
-        #         'leibniz:default-node': {'days_ns': (1.10726, None, 0.10, 'days/ns')},
-        #         'vaughan:default-node': {'days_ns': (0.5438339, None, 0.10, 'days/ns')},
-        #         'breniac:default-node': {'days_ns': (0.8281610, None, 0.10, 'days/ns')},
-        #         'hydra:default-node': {'days_ns': (0.5427335, None, 0.10, 'days/ns')},
-        #         'genius:default-node': {'days_ns': (0.565824, None, 0.10, 'days/ns')},
-        #     },
-        # }
-        # self.reference = self.scale_reference[self.num_nodes]
 
     @run_after('setup')
     def set_num_cpus(self):
         self.num_tasks = int(self.num_nodes)
+        self.num_cpus_per_task = self.current_partition.extras['num_cpus']
 
         configFile = self.download_material()
+        self.create_nodelist()
 
-        # VSC specific config
-        if self.current_system.name in ['leibniz', 'breniac']:
-            self.num_cpus_per_task = 28
-            self.modules = ['NAMD/2.14-verbs']
-            launcher = 'charm_antwerp'
-        elif self.current_system.name == 'vaughan':
-            self.num_cpus_per_task = 64
-            self.modules = ['NAMD/2.14-verbs']
-            launcher = 'charm_antwerp'
-        elif self.current_system.name == 'hydra':
-            self.num_tasks = 40 * self.num_tasks
-            self.num_tasks_per_node = 40
-            self.modules = ['NAMD/2.14-foss-2019b-mpi']
-            self.job.options = ["--partition=skylake_mpi",
-                                "--exclusive", f"--nodes={int(self.num_nodes)}"]
-            launcher = 'mpi'
-        elif self.current_system.name == 'genius':
-            self.num_cpus_per_task = 36
-            self.modules = ['NAMD/2.14-foss-2019b-mpi']
-            launcher = 'charm'
-
-        # select launcher
-        if launcher == 'charm_antwerp':
-            self.create_nodelist()
-            self.executable = f'charmrun ++p {self.num_cpus_per_task*self.num_tasks} ++nodelist mynodes $EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
-        if launcher == 'charm':
-            self.executable = f'charmrun +p {self.num_cpus_per_task*self.num_tasks} $EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
-        if launcher == 'mpi':
-            self.executable = f'srun $EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
+        ntasks_total = self.num_cpus_per_task * self.num_tasks
+        self.executable = (
+            f'charmrun ++p {ntasks_total} ++nodelist mynodes '
+            f'$EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
+        )

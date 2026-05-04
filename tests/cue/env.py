@@ -10,8 +10,8 @@ from envars_list import envars
 class VSCEnvTest(rfm.RunOnlyRegressionTest):
     descr = "test environment variable "
     envar = parameter(envars.keys())
-    valid_systems = ["*:local", "*:default*"]
-    valid_prog_environs = ["standard"]
+    valid_systems = ['+login', '+cpu +default']
+    valid_prog_environs = ['+default']
     time_limit = '10m'
     num_tasks = 1
     num_tasks_per_node = 1

@@ -1,4 +1,4 @@
-standard_partitions_tool_test = ["*:local", "*:default-node"]
+standard_partitions_tool_test = ['+login', '+cpu +default']
 
 
 tools = {
@@ -11,7 +11,7 @@ tools = {
         # 're': r'(?<=\) )\d+',             # optional:     custom regex for the command output if needed
         # 'modname': 'module'               # optional:     load the specified module.
         # 'not_as_module': Bool             # optional:     if True, modname is mandatory in order to work. Check the inexistence of the module. Read msg from lmod in stderr.
-        # 'avail_on': ['*:local',]          # optional:     list of systems/partitions where to perform the test, if not specified checks standard_partitions_tool_test.
+        # 'avail_on': ['+login',]           # optional:     list of feature-flag selectors where to perform the test, if not specified checks standard_partitions_tool_test.
         # 'negate': Bool                    # optional:     default is False. If True, negate the result of the Availability test.
     # },
     'bash':
@@ -91,19 +91,19 @@ tools = {
     {
         'exe': 'rsync',
         'minver': '3.1.2',
-        'avail_on': ['*:local']
+        'avail_on': ['+login']
     },
     'wget':
     {
         'exe': 'wget',
         'minver': '1.14',
-        'avail_on': ['*:local']
+        'avail_on': ['+login']
     },
     'curl':
     {
         'exe': 'curl',
         'minver': '7.29',
-        'avail_on': ['*:local']
+        'avail_on': ['+login']
     },
     'apptainer':
     {
@@ -133,14 +133,14 @@ tools = {
         'exe': 'smbclient',
         'minver': '4.10.16',
         'modname': 'Samba',
-        'avail_on': ['*:local']
+        'avail_on': ['+login']
     },
     'EasyBuild_module':
     {
         'exe': 'eb',
         'minver': '4.4.0',
         'modname': 'EasyBuild',
-        'avail_on': ['*:local']
+        'avail_on': ['+login']
     },
     'EasyBuild_not_on_image':
     {
@@ -157,13 +157,13 @@ tools = {
     {
         'exe': 'davix-cp',
         'minver': '0.7.6',
-        'avail_on': ['*:local']
+        'avail_on': ['+login']
     },
     'iRODS':
     {
         'exe': 'icd',
         'minver': '4.2.8',
-        'avail_on': ['*:local'],
+        'avail_on': ['+login'],
         'veropt': '-h'
     },
 

@@ -4,7 +4,7 @@ import reframe.utility.sanity as sn
 
 class JuliaLinalgBaseTest(rfm.RunOnlyRegressionTest):
     def __init__(self):
-        self.valid_prog_environs = ['standard']
+        self.valid_prog_environs = ['+default']
         self.sanity_patterns = sn.assert_found(r'Julia version:*',
                                                self.stdout)
         self.modules = ['Julia']
@@ -20,11 +20,9 @@ class JuliaLinalgTest(JuliaLinalgBaseTest):
     def __init__(self):
         super().__init__()
         self.descr = 'Test a few typical Julia LinAlg operations'
-        self.valid_systems = ['*:default-node']
+        self.valid_systems = ['+cpu +default']
         self.num_tasks_per_node = 1
-        self.num_cpus_per_task = 20
         self.tags.add('performance')
-        self.executable_opts += [str(self.num_cpus_per_task)]
 
         self.perf_patterns = {
             'dot': sn.extractsingle(
@@ -39,59 +37,16 @@ class JuliaLinalgTest(JuliaLinalgBaseTest):
                 r'\s+(?P<lu>\S+)\s+s',
                 self.stdout, 'lu', float),
         }
-        # self.reference = {
-        #     'leibniz:default-node': {
-        #         'dot': (0.30, None, 0.1, 'seconds'),
-        #         'cholesky': (0.22, None, 0.1, 'seconds'),
-        #         'lu': (0.28, None, 0.1, 'seconds'),
-        #     },
-        #     'vaughan:default-node': {
-        #         'dot': (0.47, None, 0.1, 'seconds'),
-        #         'cholesky': (0.57, None, 0.1, 'seconds'),
-        #         'lu': (0.31, None, 0.1, 'seconds'),
-        #     },
-        #     'breniac:default-node': {
-        #         'dot': (0.47, None, 0.1, 'seconds'),
-        #         'cholesky': (0.57, None, 0.1, 'seconds'),
-        #         'lu': (0.31, None, 0.1, 'seconds'),
-        #     },
-        #     'hortense:default-node': {
-        #         'dot': (0.44, None, 0.1, 'seconds'),
-        #         'cholesky': (0.47, None, 0.1, 'seconds'),
-        #         'lu': (0.49, None, 0.1, 'seconds'),
-        #     },
-        #     'hydra:default-node': {
-        #         'dot': (0.15, None, 0.1, 'seconds'),
-        #         'cholesky': (0.22, None, 0.1, 'seconds'),
-        #         'lu': (0.30, None, 0.1, 'seconds'),
-        #     },
-        #     'genius:default-node': {
-        #         'dot': (0.15, None, 0.1, 'seconds'),
-        #         'cholesky': (0.21, None, 0.1, 'seconds'),
-        #         'lu': (0.18, None, 0.1, 'seconds'),
-        #     },
-        # }
-
-    @run_after('setup')
-    def set_var_postrun(self):
-        if self.current_system.name == "genius":
-            self.env_vars = {"JULIA_DEPOT_PATH": "$VSC_SCRATCH/rfm_julia_$PBS_JOBID"}
-            self.postrun_cmds = ['rm -rf $VSC_SCRATCH/rfm_julia_$PBS_JOBID']
-        else:
-            self.env_vars = {"JULIA_DEPOT_PATH": "$VSC_SCRATCH/rfm_julia_$SLURM_JOBID"}
-            self.postrun_cmds = ['rm -rf $VSC_SCRATCH/rfm_julia_$SLURM_JOBID']
-
-    @run_after('setup')
-    def set_options(self):
-        if self.current_system.name == "hydra":
-            self.job.options = ["--partition=skylake,skylake_mpi", "--exclusive"]
-        elif self.current_system.name == "hortense":
-            self.job.options = ["--exclusive"]
 
     @run_after('setup')
     def set_num_cpus(self):
-        self.sanity_patterns = sn.and_(sn.assert_found(r'BLAS num threads:',
-                                                       self.stdout
-                                                       ),
-                                       self.sanity_patterns) 
-                                        
+        self.num_cpus_per_task = self.current_partition.extras['num_cpus']
+        self.executable_opts = ['linalg.jl', str(self.num_cpus_per_task)]
+        jobid = '$SLURM_JOBID'
+        self.env_vars = {'JULIA_DEPOT_PATH': f'$VSC_SCRATCH/rfm_julia_{jobid}'}
+        self.postrun_cmds = [f'rm -rf $VSC_SCRATCH/rfm_julia_{jobid}']
+        self.job.options = ['--exclusive']
+        self.sanity_patterns = sn.and_(
+            sn.assert_found(r'BLAS num threads:', self.stdout),
+            self.sanity_patterns,
+        )

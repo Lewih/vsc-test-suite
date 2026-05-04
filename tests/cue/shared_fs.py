@@ -12,8 +12,8 @@ class VSCSharedFSMountTest(rfm.RunOnlyRegressionTest):
     descr = "test shared filesystem mount point "
     fs = parameter(shared_fs.keys())
     site = parameter(shared_fs_sites)
-    valid_systems = ["*:local", "*:default-node"]
-    valid_prog_environs = ["standard"]
+    valid_systems = ['+login', '+cpu +default']
+    valid_prog_environs = ['+default']
     maintainers = ['rverschoren']
     time_limit = '10m'
     num_tasks = 1
@@ -38,8 +38,8 @@ class VSCSharedFSMode(rfm.RunOnlyRegressionTest):
     descr = "test shared filesystem mode "
     fs = parameter(shared_fs.keys())
     site = parameter(shared_fs_sites)
-    valid_systems = ["*:local", "*:default-node"]
-    valid_prog_environs = ["standard"]
+    valid_systems = ['+login', '+cpu +default']
+    valid_prog_environs = ['+default']
     maintainers = ['rverschoren']
     time_limit = '10m'
     num_tasks = 1
@@ -71,8 +71,8 @@ class VSCSharedFSAccountDir(rfm.RunOnlyRegressionTest):
         if 'envar' in shared_fs[x].keys():
             targets += [x]
     fs = parameter(targets)
-    valid_systems = ["*:local", "*:default-node"]
-    valid_prog_environs = ["standard"]
+    valid_systems = ['+login', '+cpu +default']
+    valid_prog_environs = ['+default']
     maintainers = ['rverschoren']
     time_limit = '10m'
     num_tasks = 1
