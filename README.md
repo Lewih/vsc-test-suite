@@ -5,6 +5,7 @@ ReFrame test suite for VSC (Flemish Supercomputer Centre) clusters.
 ## Requirements
 
 - ReFrame ≥ 4.6 available as a module (e.g. `module load ReFrame`)
+- archspec available as a module
 - Python 3
 
 ## How to run

@@ -67,7 +67,7 @@ site_configuration = {
                     'name': 'default',
                     'scheduler': 'slurm',
                     'modules': [],
-                    'access': ['--partition=skylake,skylake_mpi', '--exclusive'],
+                    'access': [],
                     'environs': cpu_env_list,
                     'descr': 'default-node jobs (skylake)',
                     'max_jobs': 1,
@@ -413,7 +413,7 @@ site_configuration = {
          'modules': ['intel/2025a'], 'features': ['intel', 'mpi', 'fftw']},
 
         {'name': 'CUDA', 'cc': 'nvcc', 'cxx': 'nvcc',
-         'modules': ['CUDA/12.8.0'], 'features': ['cuda']},
+         'modules': ['CUDA/12.8.0'], 'features': ['cuda']}, # startinf with CUDA 13 some gpu architecture are deprecated
     ],
     'general': [
         {
