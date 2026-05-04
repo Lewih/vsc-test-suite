@@ -233,7 +233,7 @@ site_configuration = {
                         },
                     ],
                     'features': ['gpu', 'nvidia'],
-                    'extras': {'num_cpus': 64, 'num_gpus': 4},
+                    'extras': {'num_cpus': 64, 'num_gpus': 4, 'num_nodes': 1},
                 },
                 {
                     'name': 'amd',
@@ -250,7 +250,7 @@ site_configuration = {
                         },
                     ],
                     'features': ['gpu', 'amd'],
-                    'extras': {'num_cpus': 64, 'num_gpus': 2},
+                    'extras': {'num_cpus': 64, 'num_gpus': 2, 'num_nodes': 2},
                 },
             ]
         },
@@ -326,7 +326,7 @@ site_configuration = {
                         },
                     ],
                     'features': ['gpu', 'nvidia', 'deprecated'],
-                    'extras': {'num_cpus': 28, 'num_gpus': 2},
+                    'extras': {'num_cpus': 28, 'num_gpus': 2, 'num_nodes': 2},
                 },
             ]
         },

@@ -16,7 +16,7 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
         'cd gpu-burn',
         'make',
     ]
-    executable = './gpu_burn --output=rfm_GPUBURN_nvidia_node-%N.out ./gpu_burn 20'
+    executable = 'srun --output=rfm_GPUBURN_nvidia_node-%N.out ./gpu_burn 20'
     tags = {'gpu', 'burn', 'performance', 'vsc'}
     num_devices = 0
     num_tasks_per_node = 1
@@ -41,9 +41,9 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
         extras = self.current_partition.extras
         self.num_devices = extras['num_gpus']
         self.num_cpus_per_task = extras['num_cpus']
-        # one task per node; charm/gpu-burn fans out across the visible GPUs
-        self.num_tasks = self.num_tasks_per_node
-        self.extra_resources = {'gpu': {'num_gpus': str(self.num_devices)}}
+        # one task per node;
+        self.num_tasks = self.num_tasks_per_node * extras['num_nodes']
+        self.extra_resources = {'gpu': {'num_gpus': str(self.num_devices)}} # gpus per node, not total gpus
         self.descr = (
             f'Nvidia gpu burn test on {self.current_system.name} '
             f'with {self.num_devices} gpus'

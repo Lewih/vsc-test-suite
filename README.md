@@ -115,3 +115,4 @@ Site configuration is in [config_vsc.py](config_vsc.py). Each partition declares
 - `features` — list of flags tests can match against
 - `extras['num_cpus']` — cores available per node (used by tests instead of hard-coded site values)
 - `extras['num_gpus']` — GPUs per node (GPU partitions only)
+- `extras['num_nodes']` - maximum number of nodes in the partition

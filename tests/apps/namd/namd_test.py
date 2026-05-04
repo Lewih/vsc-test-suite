@@ -4,6 +4,7 @@ from reframe.core.backends import getlauncher
 
 
 class NamdBaseTest(rfm.RunOnlyRegressionTest):
+    # This test assumes NAMD3, MPI build, is the default version
     num_nodes = parameter([1, 2, 4])
 
     def __init__(self, arch):
@@ -31,7 +32,7 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
 
     @run_before('run')
     def replace_launcher(self):
-        self.job.launcher = getlauncher('local')()
+        self.job.launcher = getlauncher('srun')()
 
     def download_material(self):
         if int(self.num_nodes) in {1, 2}:
@@ -47,46 +48,10 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
             ]
             return 'stmv'
 
-    def create_nodelist(self):
-        # slurm prerun commands to build a charm++ ++nodelist file
-        self.prerun_cmds += [
-            'echo Number of nodes: $SLURM_NPROCS',
-            'for node in `scontrol show hostnames`; do echo host $node >>mynodes; done',
-        ]
-
 
 @rfm.simple_test
-class Namd_SMP_CPUTest(NamdBaseTest):
-    # NAMD SMP CPU test using charmrun
-
-    def __init__(self):
-        self.time_limit = '20m'
-
-        self.valid_systems = ['+cpu +default']
-        self.valid_prog_environs = ['+default']
-        super().__init__('cpu')
-        # add the smp tag AFTER super().__init__() resets self.tags
-        self.tags.add('smp')
-
-    @run_after('setup')
-    def set_num_cpus(self):
-        self.num_tasks = int(self.num_nodes)
-        self.num_cpus_per_task = self.current_partition.extras['num_cpus']
-
-        configFile = self.download_material()
-        self.create_nodelist()
-
-        ntasks_total = self.num_cpus_per_task * self.num_tasks
-        self.executable = (
-            f'charmrun ++p {ntasks_total} '
-            f'++ppn {self.num_cpus_per_task} ++nodelist mynodes '
-            f'$EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
-        )
-
-
-@rfm.simple_test
-class Namd_NotSMP_CPUTest(NamdBaseTest):
-    # NAMD non-SMP CPU test using charmrun
+class Namd_CPUTest(NamdBaseTest):
+    # NAMD non-SMP CPU test
 
     def __init__(self):
         self.time_limit = '20m'
@@ -97,14 +62,11 @@ class Namd_NotSMP_CPUTest(NamdBaseTest):
 
     @run_after('setup')
     def set_num_cpus(self):
-        self.num_tasks = int(self.num_nodes)
-        self.num_cpus_per_task = self.current_partition.extras['num_cpus']
+        # for non-SMP, we want one task per CPU, so total tasks = num_nodes * num_cpus_per_node
+        self.num_tasks = int(self.num_nodes) * self.current_partition.extras['num_cpus']
+        self.num_cpus_per_task = 1
 
         configFile = self.download_material()
-        self.create_nodelist()
-
-        ntasks_total = self.num_cpus_per_task * self.num_tasks
         self.executable = (
-            f'charmrun ++p {ntasks_total} ++nodelist mynodes '
-            f'$EBROOTNAMD/namd2 {configFile}/{configFile}.namd'
+            f'$EBROOTNAMD/namd3 +setcpuaffinity {configFile}/{configFile}.namd'
         )
