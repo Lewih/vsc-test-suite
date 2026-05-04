@@ -15,7 +15,7 @@ cd vsc-test-suite
 ./run.sh [reframe options]
 ```
 
-Any arguments are passed directly to `reframe`. The `--run` flag is already set by the script.
+Any arguments are passed directly to `reframe`. The `--run` flag is already set by the script unless `--list` is passed.
 
 Examples:
 

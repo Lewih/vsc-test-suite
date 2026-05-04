@@ -116,18 +116,18 @@ tools = {
         'options': '2>&1',
         'minver': '8.2.7', 
     },
-    'bazaar':
-    {
-        'exe': 'bzr',
-        'minver': '2.5.1',
-        'modname': 'Bazaar',
-    },
-    'mercurial':
-    {
-        'exe': 'hg',
-        'minver': '5.8',
-        'modname': 'Mercurial',
-    },
+    # 'bazaar':
+    # {
+    #     'exe': 'bzr',
+    #     'minver': '2.5.1',
+    #     'modname': 'Bazaar',
+    # },
+    # 'mercurial':
+    # {
+    #     'exe': 'hg',
+    #     'minver': '5.8',
+    #     'modname': 'Mercurial',
+    # },
     'Samba Client':
     {
         'exe': 'smbclient',
@@ -150,7 +150,7 @@ tools = {
     'ReFrame':
     {
         'exe': 'reframe',
-        'minver': '3.10.1',
+        'minver': '4.6',
         'modname': 'ReFrame',
     },
     'Davix':
