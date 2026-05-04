@@ -8,7 +8,7 @@ os.environ["TEST_ENVAR_OUTSIDE"] = 'defined'
 @rfm.simple_test
 class JobCleanEnvTest(rfm.RunOnlyRegressionTest):
     descr = "test that job starts in a clean environment"
-    valid_systems = ["*:default-node"]
+    valid_systems = ["*:default*"]
     valid_prog_environs = ["standard"]
     time_limit = '10m'
     num_tasks = 1

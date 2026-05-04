@@ -1,4 +1,4 @@
-module load ReFrame/4.6.1
+module load ReFrame
 
 export RFM_CONFIG_FILES=$(dirname $0)/config_vsc.py
 export RFM_CHECK_SEARCH_PATH=$(dirname $0)/tests

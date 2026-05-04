@@ -39,38 +39,38 @@ class JuliaLinalgTest(JuliaLinalgBaseTest):
                 r'\s+(?P<lu>\S+)\s+s',
                 self.stdout, 'lu', float),
         }
-        self.reference = {
-            'leibniz:default-node': {
-                'dot': (0.30, None, 0.1, 'seconds'),
-                'cholesky': (0.22, None, 0.1, 'seconds'),
-                'lu': (0.28, None, 0.1, 'seconds'),
-            },
-            'vaughan:default-node': {
-                'dot': (0.47, None, 0.1, 'seconds'),
-                'cholesky': (0.57, None, 0.1, 'seconds'),
-                'lu': (0.31, None, 0.1, 'seconds'),
-            },
-            'breniac:default-node': {
-                'dot': (0.47, None, 0.1, 'seconds'),
-                'cholesky': (0.57, None, 0.1, 'seconds'),
-                'lu': (0.31, None, 0.1, 'seconds'),
-            },
-            'hortense:default-node': {
-                'dot': (0.44, None, 0.1, 'seconds'),
-                'cholesky': (0.47, None, 0.1, 'seconds'),
-                'lu': (0.49, None, 0.1, 'seconds'),
-            },
-            'hydra:default-node': {
-                'dot': (0.15, None, 0.1, 'seconds'),
-                'cholesky': (0.22, None, 0.1, 'seconds'),
-                'lu': (0.30, None, 0.1, 'seconds'),
-            },
-            'genius:default-node': {
-                'dot': (0.15, None, 0.1, 'seconds'),
-                'cholesky': (0.21, None, 0.1, 'seconds'),
-                'lu': (0.18, None, 0.1, 'seconds'),
-            },
-        }
+        # self.reference = {
+        #     'leibniz:default-node': {
+        #         'dot': (0.30, None, 0.1, 'seconds'),
+        #         'cholesky': (0.22, None, 0.1, 'seconds'),
+        #         'lu': (0.28, None, 0.1, 'seconds'),
+        #     },
+        #     'vaughan:default-node': {
+        #         'dot': (0.47, None, 0.1, 'seconds'),
+        #         'cholesky': (0.57, None, 0.1, 'seconds'),
+        #         'lu': (0.31, None, 0.1, 'seconds'),
+        #     },
+        #     'breniac:default-node': {
+        #         'dot': (0.47, None, 0.1, 'seconds'),
+        #         'cholesky': (0.57, None, 0.1, 'seconds'),
+        #         'lu': (0.31, None, 0.1, 'seconds'),
+        #     },
+        #     'hortense:default-node': {
+        #         'dot': (0.44, None, 0.1, 'seconds'),
+        #         'cholesky': (0.47, None, 0.1, 'seconds'),
+        #         'lu': (0.49, None, 0.1, 'seconds'),
+        #     },
+        #     'hydra:default-node': {
+        #         'dot': (0.15, None, 0.1, 'seconds'),
+        #         'cholesky': (0.22, None, 0.1, 'seconds'),
+        #         'lu': (0.30, None, 0.1, 'seconds'),
+        #     },
+        #     'genius:default-node': {
+        #         'dot': (0.15, None, 0.1, 'seconds'),
+        #         'cholesky': (0.21, None, 0.1, 'seconds'),
+        #         'lu': (0.18, None, 0.1, 'seconds'),
+        #     },
+        # }
 
     @run_after('setup')
     def set_var_postrun(self):

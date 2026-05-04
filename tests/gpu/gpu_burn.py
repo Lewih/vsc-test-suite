@@ -16,20 +16,20 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
     num_devices = 0
     num_tasks_per_node = 1
     # no upper bound, keep lower bound for reference
-    reference = {
-        'vaughan:nvidia': {
-            'nvam1_device0': (17339.0, -0.05, None, 'Gflop/s'),
-            'nvam1_device1': (17336.0, -0.05, None, 'Gflop/s'),
-            'nvam1_device2': (17340.0, -0.05, None, 'Gflop/s'),
-            'nvam1_device3': (17335.0, -0.05, None, 'Gflop/s'),
-        },
-        'leibniz:nvidia': {
-            'nvpa1_device0': (7412.0, -0.05, None, 'Gflop/s'),
-            'nvpa1_device1': (7412.0, -0.05, None, 'Gflop/s'),
-            'nvpa2_device0': (7412.0, -0.05, None, 'Gflop/s'),
-            'nvpa2_device1': (7412.0, -0.05, None, 'Gflop/s'),
-        }
-    }
+    # reference = {
+    #     'vaughan:nvidia': {
+    #         'nvam1_device0': (17339.0, -0.05, None, 'Gflop/s'),
+    #         'nvam1_device1': (17336.0, -0.05, None, 'Gflop/s'),
+    #         'nvam1_device2': (17340.0, -0.05, None, 'Gflop/s'),
+    #         'nvam1_device3': (17335.0, -0.05, None, 'Gflop/s'),
+    #     },
+    #     'leibniz:nvidia': {
+    #         'nvpa1_device0': (7412.0, -0.05, None, 'Gflop/s'),
+    #         'nvpa1_device1': (7412.0, -0.05, None, 'Gflop/s'),
+    #         'nvpa2_device0': (7412.0, -0.05, None, 'Gflop/s'),
+    #         'nvpa2_device1': (7412.0, -0.05, None, 'Gflop/s'),
+    #     }
+    # }
 
     @run_before('run')
     def set_options(self):

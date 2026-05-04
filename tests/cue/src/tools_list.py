@@ -153,13 +153,6 @@ tools = {
         'minver': '3.10.1',
         'modname': 'ReFrame',
     },
-    'Singularity_image_only':
-    {
-        'exe': 'singularity',
-        'modname': 'Singularity',
-        'not_as_module': True,
-        'avail_on': ['*:local']
-    },
     'Davix':
     {
         'exe': 'davix-cp',

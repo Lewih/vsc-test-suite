@@ -1,6 +1,5 @@
 import grp
 import os
-from py import builtin
 
 # use 'info' to log to syslog
 syslog_level = 'warning'

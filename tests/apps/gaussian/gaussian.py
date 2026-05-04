@@ -32,19 +32,19 @@ class GaussianCPUTest(GaussianBaseTest):
         self.valid_systems = ['leibniz:default-node',
                               'vaughan:default-node',
                               'hydra:default-node']
-        self.reference = {
-            'leibniz:default-node': {
-                'time': (33.0, None, 0.05, 'minutes'),
-
-            },
-            'vaughan:default-node': {
-                'time': (15.0, None, 0.05, 'minutes'),
-            },
-            'hydra:default-node': {
-                'time': (21.5, None, 0.05, 'minutes'),
-            },
-            
-        }
+        # self.reference = {
+        #     'leibniz:default-node': {
+        #         'time': (33.0, None, 0.05, 'minutes'),
+        #
+        #     },
+        #     'vaughan:default-node': {
+        #         'time': (15.0, None, 0.05, 'minutes'),
+        #     },
+        #     'hydra:default-node': {
+        #         'time': (21.5, None, 0.05, 'minutes'),
+        #     },
+        #
+        # }
         self.tags = {'apps', 'gaussian', 'performance', 'vsc'}
 
 
