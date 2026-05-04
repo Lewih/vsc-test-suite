@@ -16,7 +16,7 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
         'cd gpu-burn',
         'make',
     ]
-    executable = '--output=rfm_GPUBURN_nvidia_node-%N.out ./gpu_burn 20'
+    executable = './gpu_burn --output=rfm_GPUBURN_nvidia_node-%N.out ./gpu_burn 20'
     tags = {'gpu', 'burn', 'performance', 'vsc'}
     num_devices = 0
     num_tasks_per_node = 1

@@ -225,7 +225,7 @@ site_configuration = {
                     'environs': ['CUDA', 'standard'],
                     'descr': 'Nvidia ampere node',
                     'max_jobs': 10,
-                    'launcher': 'srun',
+                    'launcher': 'local',
                     'resources': [
                         {
                             'name': 'gpu',
@@ -242,7 +242,7 @@ site_configuration = {
                     'environs': ['standard'],
                     'descr': 'AMD GPU node',
                     'max_jobs': 10,
-                    'launcher': 'srun',
+                    'launcher': 'local',
                     'resources': [
                         {
                             'name': 'gpu',
@@ -318,7 +318,7 @@ site_configuration = {
                     'environs': ['CUDA', 'standard'],
                     'descr': 'Nvidia pascal nodes',
                     'max_jobs': 5,
-                    'launcher': 'srun',
+                    'launcher': 'local',
                     'resources': [
                         {
                             'name': 'gpu',
