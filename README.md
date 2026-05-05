@@ -26,11 +26,14 @@ Examples:
 # Run all tests on the current cluster
 ./run.sh
 
-# Run tests tagged 'cpu' on a specific system
-./run.sh --system=genius:default --tag=cpu
+# Pass a job option (e.g. when using the fallback system) 
+./run.sh -J '-A ap_calcua_staff'
+
+# Run tests tagged 'cue' and not tagged 'amd' on a specific system
+./run.sh -t cue -T amd
 
 # Run only MPI tests
-./run.sh --system=genius:mpi-job
+./run.sh --system=vsc_generic:mpi-job
 ```
 
 ## Output location
@@ -39,14 +42,17 @@ Results, logs, and stage files are written to `$VSC_SCRATCH/reframe`.
 
 ## Supported clusters
 
-| Cluster   | Site       |
-|-----------|------------|
-| hydra     | VUB        |
-| hortense  | UGent      |
-| genius    | KULeuven   |
-| vaughan   | UAntwerpen |
-| leibniz   | UAntwerpen |
-| breniac   | UAntwerpen |
+| Cluster   | Site       | Config file        |
+|-----------|------------|--------------------|
+| hydra     | VUB        | `sites/brussel.py` |
+| hortense  | UGent      | `sites/gent.py`    |
+| genius    | KULeuven   | `sites/leuven.py`  |
+| vaughan   | UAntwerpen | `sites/antwerp.py` |
+| leibniz   | UAntwerpen | `sites/antwerp.py` |
+| breniac   | UAntwerpen | `sites/antwerp.py` |
+
+A generic `vsc_generic` fallback system also matches any unlisted VSC host
+so tests can be tried out on a new cluster without touching the config first.
 
 ## Feature flags
 
@@ -98,21 +104,32 @@ tests/
     gaussian/     Gaussian application test
     julia/        Julia linear algebra benchmark
     matlab/       MATLAB linear algebra benchmark
-    namd/         NAMD MD simulation (SMP and multi-node)
+    namd/         NAMD MD simulation (multi-node MPI)
     python/       NumPy/SciPy performance check
   cue/            Common User Environment checks
                   (tools, env vars, shared filesystems, job submission)
-  gpu/            GPU burn stress test
+  gpuburn/        GPU burn stress test
   micro/
     basic/        Hello-world job submission sanity check
+    gpu/          GPU job submission and visibility check (NVIDIA + AMD)
     mpi/          MPI hello-world sanity check
 ```
 
 ## Configuration
 
-Site configuration is in [config_vsc.py](config_vsc.py). Each partition declares:
+The top-level [config_vsc.py](config_vsc.py) holds the shared bits —
+environments, logging, the `cpu_env_list` toolchain list, and the
+`vsc_generic` fallback system. Per-cluster definitions live in
+[sites/](sites/), one file per city; see [sites/README.md](sites/README.md)
+for the directory contract.
+
+Sites are auto-discovered: dropping a new file in `sites/` that exports a
+`systems` list is enough to register a new cluster — no edits to
+`config_vsc.py` needed.
+
+Each partition declares:
 
 - `features` — list of flags tests can match against
-- `extras['num_cpus']` — cores available per node (used by tests instead of hard-coded site values)
+- `extras['num_cpus']` — cores available per node (used by tests instead of
+  hard-coded site values)
 - `extras['num_gpus']` — GPUs per node (GPU partitions only)
-- `extras['num_nodes']` - maximum number of nodes in the partition
