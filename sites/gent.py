@@ -8,7 +8,7 @@ for _group in [grp.getgrgid(x).gr_name for x in os.getgroups()]:
     if _group in ('astaff', 'badmin', 'gadminforever', 'l_sysadmin'):
         _flag = f'-A {_group}'
         break
-_access = ([_flag] if _flag else []) + ['--exclusive']
+_access = [_flag] if _flag else []
 
 # UGent - Hortense (tier-1)
 systems = [

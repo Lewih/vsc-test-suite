@@ -67,6 +67,7 @@ class Namd_CPUTest(NamdBaseTest):
         # for non-SMP, we want one task per CPU, so total tasks = num_nodes * num_cpus_per_node
         self.num_tasks = int(self.num_nodes) * self.current_partition.extras['num_cpus']
         self.num_cpus_per_task = 1
+        self.job.options = ['--exclusive']
 
         configFile = self.download_material()
         self.executable = (

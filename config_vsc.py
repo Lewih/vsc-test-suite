@@ -46,6 +46,12 @@ for _f in sorted(glob.glob(os.path.join(_sites_dir, '*.py'))):
     _general.extend(getattr(_mod, 'general', []))
 
 site_configuration = {
+    # Autodetect the system from the fully qualified hostname: sofia's login
+    # nodes report the bare 'login01', which no 'hostnames' pattern can claim
+    # safely. ReFrame uses the first method that returns, so the FQDN one must
+    # come first; getfqdn() falls back to the short name if it does not
+    # resolve, in which case the system lands on vsc_generic as before.
+    'autodetect_methods': ['py::socket.getfqdn', 'py::socket.gethostname'],
     'systems': _systems + [
         # ------------------------------------------------------------------
         # Generic VSC fallback — always last so '.*' doesn't shadow named clusters — matches any VSC host not listed above.

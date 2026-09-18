@@ -1,12 +1,15 @@
+import grp
+import os
 from sites.common import cpu_env_list
 
 # VUB - Hydra (tier-2) and sofia (tier-1)
-#
-# sofia (docs.vscentrum.be/brussel/tier1_sofia.html): a Tier-1 project is
-# needed, pass it at run time with `./run.sh -J '-A <project>'`. Jobs must
-# name a partition and start in a clean environment; memory overrides
-# (--mem*) are rejected. On zen4_h200 Slurm enforces exactly 24 cores per
-# GPU (-> extras['cpus_per_gpu']); no cluster module, srun works for MPI.
+
+_flag = ''
+for _group in [grp.getgrgid(x).gr_name for x in os.getgroups()]:
+    if _group in ('astaff', 'badmin', 'gadminforever', 'l_sysadmin'):
+        _flag = f'-A {_group}'
+        break
+_account = [_flag] if _flag else []
 
 _gpu_resources = [{'name': 'gpu', 'options': ['--gpus-per-node={num_gpus}']}]
 
@@ -67,7 +70,7 @@ systems = [
                 'name': 'default',
                 'scheduler': 'slurm',
                 'modules': [],
-                'access': ['-p zen5_dense'],
+                'access': _account + ['-p zen5_dense'],
                 'environs': cpu_env_list,
                 'descr': 'default-node jobs (zen5c, 2x192 cores)',
                 'max_jobs': 20,
@@ -79,7 +82,7 @@ systems = [
                 'name': 'zen5_himem',
                 'scheduler': 'slurm',
                 'modules': [],
-                'access': ['-p zen5_himem'],
+                'access': _account + ['-p zen5_himem'],
                 'environs': cpu_env_list,
                 'descr': 'zen5 nodes, 1.5TB memory',
                 'max_jobs': 20,
@@ -91,7 +94,7 @@ systems = [
                 'name': 'zen4_h200',
                 'scheduler': 'slurm',
                 'modules': [],
-                'access': ['-p zen4_h200'],
+                'access': _account + ['-p zen4_h200'],
                 'environs': ['CUDA', 'standard'],
                 'descr': 'Nvidia H200 nodes (24 cores per GPU enforced)',
                 'max_jobs': 10,
@@ -104,7 +107,7 @@ systems = [
                 'name': 'zen5_vis',
                 'scheduler': 'slurm',
                 'modules': [],
-                'access': ['-p zen5_vis'],
+                'access': _account + ['-p zen5_vis'],
                 'environs': ['CUDA', 'standard'],
                 'descr': 'Nvidia RTX 5000 Ada visualisation nodes',
                 'max_jobs': 4,

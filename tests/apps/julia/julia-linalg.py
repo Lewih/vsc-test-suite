@@ -40,7 +40,8 @@ class JuliaLinalgTest(JuliaLinalgBaseTest):
 
     @run_after('setup')
     def set_num_cpus(self):
-        self.num_cpus_per_task = self.current_partition.extras['num_cpus']
+        # cap the BLAS threading at 10 cores; the test is not designed to scale past that
+        self.num_cpus_per_task = min(10, self.current_partition.extras['num_cpus'])
         self.executable_opts = ['linalg.jl', str(self.num_cpus_per_task)]
         jobid = '$SLURM_JOBID'
         self.env_vars = {'JULIA_DEPOT_PATH': f'$VSC_SCRATCH/rfm_julia_{jobid}'}

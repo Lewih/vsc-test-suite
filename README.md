@@ -57,14 +57,19 @@ Results, logs, and stage files are written to `$VSC_SCRATCH/reframe`.
 A generic `vsc_generic` fallback system also matches any unlisted VSC host
 so tests can be tried out on a new cluster without touching the config first.
 
+The system is autodetected from the fully qualified hostname
+(`autodetect_methods` in `config_vsc.py`).
+
 The three KU Leuven clusters share the Genius login nodes, so hostname
 autodetection always picks `genius` (GPU nodes only); use `--system=wice` or
 `--system=mindwell` for the others. With ReFrame >= 4.10 the partitions'
 `sched_options` make job polling (`sacct`) use the right cluster; for older
 versions `run.sh` exports `SLURM_CLUSTERS` for the run instead.
 
-The Tier-1 cluster sofia needs a compute project on every job; the account is
-not hard-coded, so pass it on the command line: `./run.sh -J '-A <project>'`.
+The Tier-1 clusters (hortense, sofia) need a compute project on every job.
+For VSC staff the account is picked from their group membership at load time
+(`sites/gent.py`, `sites/brussel.py`); everyone else passes it on the command
+line: `./run.sh -J '-A <project>'`.
 
 ## Feature flags
 
