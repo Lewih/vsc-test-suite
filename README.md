@@ -26,11 +26,14 @@ Examples:
 # Run all tests on the current cluster
 ./run.sh
 
-# Run tests tagged 'cpu' on a specific system
-./run.sh --system=genius:default --tag=cpu
+# Pass a job option (e.g. when using the fallback system) 
+./run.sh -J '-A ap_calcua_staff'
+
+# Run tests tagged 'cue' and not tagged 'amd' on a specific system
+./run.sh -t cue -T amd
 
 # Run only MPI tests
-./run.sh --system=genius:mpi-job
+./run.sh --system=vsc_generic:mpi-job
 ```
 
 ## Output location
