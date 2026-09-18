@@ -11,6 +11,9 @@ for _group in [grp.getgrgid(x).gr_name for x in os.getgroups()]:
         break
 _account = [_flag] if _flag else []
 
+# sofia only provides the 2025a toolchains.
+_sofia_envs = [e for e in cpu_env_list if e == 'standard' or '2025a' in e]
+
 _gpu_resources = [{'name': 'gpu', 'options': ['--gpus-per-node={num_gpus}']}]
 
 systems = [
@@ -49,8 +52,8 @@ systems = [
     {
         'name': 'sofia',
         'descr': 'VSC Tier-1 sofia',
-        # login01/login02 behind login.sofia.vub.be; the exact hostname is not
-        # documented, so match loosely (--system=sofia always works).
+        # login01/login02 report a short hostname; the FQDN (see
+        # autodetect_methods in config_vsc.py) always contains 'sofia'.
         'hostnames': ['.*sofia.*'],
         'modules_system': 'lmod',
         'partitions': [
@@ -71,7 +74,7 @@ systems = [
                 'scheduler': 'slurm',
                 'modules': [],
                 'access': _account + ['-p zen5_dense'],
-                'environs': cpu_env_list,
+                'environs': _sofia_envs,
                 'descr': 'default-node jobs (zen5c, 2x192 cores)',
                 'max_jobs': 20,
                 'launcher': 'local',
@@ -83,7 +86,7 @@ systems = [
                 'scheduler': 'slurm',
                 'modules': [],
                 'access': _account + ['-p zen5_himem'],
-                'environs': cpu_env_list,
+                'environs': _sofia_envs,
                 'descr': 'zen5 nodes, 1.5TB memory',
                 'max_jobs': 20,
                 'launcher': 'local',
