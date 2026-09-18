@@ -21,10 +21,12 @@ class MPIHelloWorldTest(rfm.RegressionTest):
 
     @run_before('run')
     def set_mpi_launcher(self):
-        # Default partitions use launcher='local'; force srun for MPI jobs.
-        # Sites that need a custom MPI launcher (e.g. mympirun) should
-        # register it in config_vsc.py and override this hook.
-        self.job.launcher = getlauncher('srun')()
+        # Default partitions use launcher='local' so serial tests run without
+        # a wrapper; the MPI launcher is a site property, declared as
+        # extras['mpi_launcher'] on the partition (default: srun). KU Leuven
+        # e.g. needs mpirun because its Slurm has no PMI support.
+        launcher = self.current_partition.extras.get('mpi_launcher', 'srun')
+        self.job.launcher = getlauncher(launcher)()
 
     @sanity_function
     def assert_number_of_hellos(self):

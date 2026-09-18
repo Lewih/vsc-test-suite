@@ -1,4 +1,5 @@
 import os
+import re
 import reframe as rfm
 import reframe.utility.sanity as sn
 import sys
@@ -32,7 +33,9 @@ class VSCToolAvailabilityTest(rfm.RunOnlyRegressionTest):
 
     @run_after('init')
     def set_param(self):
-        self.executable = f"""command -v {tools[self.tool]['exe']}"""
+        # Print a sentinel instead of relying on the output of 'command -v':
+        # some sites (KU Leuven) prepend a Slurm header to the job output.
+        self.executable = f"command -v {tools[self.tool]['exe']} && echo TOOL_FOUND"
         
         modname = tools[self.tool].get('modname')
         if modname and not self.not_as_module:
@@ -41,21 +44,15 @@ class VSCToolAvailabilityTest(rfm.RunOnlyRegressionTest):
             self.postrun_cmds = [f'ml spider {modname}']
 
     @deferrable
-    def my_finder(self, patt, string):
-        with sn._open(string, 'rt', encoding='utf-8') as chars:
-            num_matches = sn.count(sn.finditer_s(patt, chars.read()))
-            if num_matches:
-                return True
-            else:
-                return False
+    def found(self, patt, filename):
+        with open(filename, 'rt', encoding='utf-8') as fp:
+            return re.search(patt, fp.read(), re.MULTILINE) is not None
 
     @sanity_function
     def assert_availability(self):
+        out = self.found(r'^TOOL_FOUND$', self.stdout)
         if self.not_as_module:
-            out = sn.and_(self.my_finder(r'^[a-zA-Z/]', self.stdout),
-                          self.my_finder(r'Unable to find', self.stderr))
-        else:
-            out = self.my_finder(r'^[a-zA-Z/]', self.stdout)
+            out = sn.and_(out, self.found(r'Unable to find', self.stderr))
 
         if tools[self.tool].get('negate'):
             return sn.not_(out)

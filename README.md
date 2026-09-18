@@ -47,12 +47,20 @@ Results, logs, and stage files are written to `$VSC_SCRATCH/reframe`.
 | hydra     | VUB        | `sites/brussel.py` |
 | hortense  | UGent      | `sites/gent.py`    |
 | genius    | KULeuven   | `sites/leuven.py`  |
+| wice      | KULeuven   | `sites/leuven.py`  |
+| mindwell  | KULeuven   | `sites/leuven.py`  |
 | vaughan   | UAntwerpen | `sites/antwerp.py` |
 | leibniz   | UAntwerpen | `sites/antwerp.py` |
 | breniac   | UAntwerpen | `sites/antwerp.py` |
 
 A generic `vsc_generic` fallback system also matches any unlisted VSC host
 so tests can be tried out on a new cluster without touching the config first.
+
+The three KU Leuven clusters share the Genius login nodes, so hostname
+autodetection always picks `genius` (GPU nodes only); use `--system=wice` or
+`--system=mindwell` for the others. With ReFrame >= 4.10 the partitions'
+`sched_options` make job polling (`sacct`) use the right cluster; for older
+versions `run.sh` exports `SLURM_CLUSTERS` for the run instead.
 
 ## Feature flags
 
@@ -125,7 +133,9 @@ for the directory contract.
 
 Sites are auto-discovered: dropping a new file in `sites/` that exports a
 `systems` list is enough to register a new cluster — no edits to
-`config_vsc.py` needed.
+`config_vsc.py` needed. A site may also export a `general` list of ReFrame
+`general` entries scoped with `target_systems` (KU Leuven uses this for
+`use_login_shell`).
 
 Each partition declares:
 
@@ -133,3 +143,5 @@ Each partition declares:
 - `extras['num_cpus']` — cores available per node (used by tests instead of
   hard-coded site values)
 - `extras['num_gpus']` — GPUs per node (GPU partitions only)
+- `extras['mpi_launcher']` — launcher used by MPI tests (default `srun`;
+  e.g. `mpirun` on KU Leuven, whose Slurm has no PMI support)

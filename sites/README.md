@@ -12,7 +12,7 @@ Files are named after the **city** of the university operating the cluster.
 |---|---|---|
 | `brussel.py` | VUB | Hydra |
 | `gent.py` | UGent | Hortense |
-| `leuven.py` | KU Leuven | Genius |
+| `leuven.py` | KU Leuven | Genius, wICE, Mindwell |
 | `antwerp.py` | UA (calcua) | Vaughan, Leibniz, Breniac |
 
 ## Contract
@@ -27,6 +27,11 @@ systems = [
 
 Single-cluster sites may also export a bare `system` dict — both forms are
 recognised by the auto-discovery loop.
+
+A site may additionally export `general`: a list of ReFrame `general`
+section entries, each carrying `target_systems`, which ReFrame merges key by
+key with the global entry in `config_vsc.py` (e.g. `use_login_shell` for
+KU Leuven).
 
 ## cpu_env_list
 

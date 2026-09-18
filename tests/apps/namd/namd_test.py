@@ -32,7 +32,9 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
 
     @run_before('run')
     def replace_launcher(self):
-        self.job.launcher = getlauncher('srun')()
+        # MPI launcher is a site property, see tests/micro/mpi/mpi_hello_world.py
+        launcher = self.current_partition.extras.get('mpi_launcher', 'srun')
+        self.job.launcher = getlauncher(launcher)()
 
     def download_material(self):
         if int(self.num_nodes) in {1, 2}:

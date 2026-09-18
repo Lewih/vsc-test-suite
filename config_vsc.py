@@ -25,11 +25,15 @@ _common = types.ModuleType('sites.common')
 _common.cpu_env_list = cpu_env_list
 sys.modules['sites.common'] = _common
 
-# Auto-discover cluster definitions: any sites/*.py that exports `system`.
-# Files are loaded alphabetically; vsc_generic is appended last so its
-# catch-all hostname pattern ('.*') never shadows a named cluster.
+# Auto-discover cluster definitions: any sites/*.py that exports `systems`
+# (or a single `system`). Files are loaded alphabetically; vsc_generic is
+# appended last so its catch-all hostname pattern ('.*') never shadows a
+# named cluster. A site may also export `general`: a list of ReFrame
+# 'general' entries scoped with 'target_systems', which ReFrame merges key
+# by key with the global entry below.
 _sites_dir = os.path.join(os.path.dirname(__file__), 'sites')
 _systems = []
+_general = []
 for _f in sorted(glob.glob(os.path.join(_sites_dir, '*.py'))):
     _name = os.path.basename(_f)[:-3]
     if _name.startswith('_') or _name == 'common':
@@ -39,6 +43,7 @@ for _f in sorted(glob.glob(os.path.join(_sites_dir, '*.py'))):
         _systems.extend(_mod.systems)
     elif hasattr(_mod, 'system'):
         _systems.append(_mod.system)
+    _general.extend(getattr(_mod, 'general', []))
 
 site_configuration = {
     'systems': _systems + [
@@ -147,7 +152,7 @@ site_configuration = {
         {'name': 'CUDA', 'cc': 'nvcc', 'cxx': 'nvcc',
          'modules': ['CUDA/12.8.0'], 'features': ['cuda']}, 
     ],
-    'general': [
+    'general': _general + [
         {
             'purge_environment': False,
             'resolve_module_conflicts': False,
