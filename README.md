@@ -57,8 +57,8 @@ Results, logs, and stage files are written to `$VSC_SCRATCH/reframe`.
 A generic `vsc_generic` fallback system also matches any unlisted VSC host
 so tests can be tried out on a new cluster without touching the config first.
 
-The system is autodetected from the fully qualified hostname
-(`autodetect_methods` in `config_vsc.py`).
+The system is autodetected by matching the `hostnames` patterns against all
+names of the login node (see `vsc_host_names` in `config_vsc.py`).
 
 The three KU Leuven clusters share the Genius login nodes, so hostname
 autodetection always picks `genius` (GPU nodes only); use `--system=wice` or

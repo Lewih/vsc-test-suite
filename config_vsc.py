@@ -1,6 +1,8 @@
 import glob
 import importlib
 import os
+import socket
+import subprocess
 import sys
 import types
 
@@ -45,13 +47,32 @@ for _f in sorted(glob.glob(os.path.join(_sites_dir, '*.py'))):
         _systems.append(_mod.system)
     _general.extend(getattr(_mod, 'general', []))
 
+
+def vsc_host_names():
+    """All names of this host, space-separated, for system autodetection.
+
+    A login node can carry several FQDNs and socket.getfqdn() returns an
+    arbitrary one: on sofia 'login01.ib', while only 'login01.sofia.brussel.vsc'
+    names the cluster. ReFrame only re.match()es the result against the
+    systems' 'hostnames', so handing it every name at once (short hostname
+    first, so the existing prefix patterns keep working) lets a site match on
+    any of them. Shown as 'Retrieved hostname' in the -vv autodetection log.
+    """
+    names = [socket.gethostname(), socket.getfqdn()]
+    try:
+        out = subprocess.run(['hostname', '-A'], capture_output=True,
+                             text=True, timeout=5)
+        names += out.stdout.split()
+    except (OSError, subprocess.SubprocessError):
+        pass
+    names.append(os.environ.get('VSC_INSTITUTE_CLUSTER', ''))
+    return ' '.join(dict.fromkeys(n for n in names if n))
+
+
 site_configuration = {
-    # Autodetect the system from the fully qualified hostname: sofia's login
-    # nodes report the bare 'login01', which no 'hostnames' pattern can claim
-    # safely. ReFrame uses the first method that returns, so the FQDN one must
-    # come first; getfqdn() falls back to the short name if it does not
-    # resolve, in which case the system lands on vsc_generic as before.
-    'autodetect_methods': ['py::socket.getfqdn', 'py::socket.gethostname'],
+    # ReFrame uses the first method that returns; the plain hostname is only a
+    # fallback in case the function above fails.
+    'autodetect_methods': ['py::vsc_host_names', 'py::socket.gethostname'],
     'systems': _systems + [
         # ------------------------------------------------------------------
         # Generic VSC fallback — always last so '.*' doesn't shadow named clusters — matches any VSC host not listed above.

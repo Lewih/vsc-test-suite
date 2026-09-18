@@ -52,8 +52,8 @@ systems = [
     {
         'name': 'sofia',
         'descr': 'VSC Tier-1 sofia',
-        # login01/login02 report a short hostname; the FQDN (see
-        # autodetect_methods in config_vsc.py) always contains 'sofia'.
+        # login0[12] carry several FQDNs; 'login01.sofia.brussel.vsc' is the
+        # one that names the cluster (see vsc_host_names in config_vsc.py).
         'hostnames': ['.*sofia.*'],
         'modules_system': 'lmod',
         'partitions': [
