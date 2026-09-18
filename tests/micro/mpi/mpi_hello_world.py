@@ -15,7 +15,7 @@ class MPIHelloWorldTest(rfm.RegressionTest):
     num_tasks = 6
     num_tasks_per_node = 3
     num_cpus_per_task = 1
-    executable = 'mpi_hello_world'
+    executable = './mpi_hello_world'
     sourcesdir = 'src_mpi_hello_world'
     launcher = parameter(['srun', 'mpirun'])
     tags = {'vsc', 'micro', 'mpi'}
