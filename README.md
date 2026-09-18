@@ -154,5 +154,7 @@ Each partition declares:
 - `extras['num_gpus']` — GPUs per node (GPU partitions only)
 - `extras['cpus_per_gpu']` — cores a job must request per GPU where the site
   enforces a fixed ratio (e.g. 24 on sofia `zen4_h200`; default 1)
-- `extras['mpi_launcher']` — launcher used by MPI tests (default `srun`;
-  e.g. `mpirun` on KU Leuven, whose Slurm has no PMI support)
+- `extras['mpi_launcher']` — the only MPI launcher that works on the
+  partition (e.g. `mpirun` on KU Leuven, whose Slurm has no PMI support).
+  Unset means both `srun` and `mpirun` work: the MPI hello-world test then
+  runs with each, and the other MPI tests use `srun`

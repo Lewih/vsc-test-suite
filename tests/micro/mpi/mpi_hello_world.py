@@ -17,16 +17,23 @@ class MPIHelloWorldTest(rfm.RegressionTest):
     num_cpus_per_task = 1
     executable = 'mpi_hello_world'
     sourcesdir = 'src_mpi_hello_world'
+    launcher = parameter(['srun', 'mpirun'])
     tags = {'vsc', 'micro', 'mpi'}
+
+    @run_after('setup')
+    def skip_unsupported_launcher(self):
+        # Both launchers are exercised, unless the partition declares the only
+        # one that works there as extras['mpi_launcher'] (KU Leuven: mpirun,
+        # its Slurm has no PMI support).
+        forced = self.current_partition.extras.get('mpi_launcher')
+        self.skip_if(forced and self.launcher != forced,
+                     f'{self.launcher} not supported here, only {forced}')
 
     @run_before('run')
     def set_mpi_launcher(self):
         # Default partitions use launcher='local' so serial tests run without
-        # a wrapper; the MPI launcher is a site property, declared as
-        # extras['mpi_launcher'] on the partition (default: srun). KU Leuven
-        # e.g. needs mpirun because its Slurm has no PMI support.
-        launcher = self.current_partition.extras.get('mpi_launcher', 'srun')
-        self.job.launcher = getlauncher(launcher)()
+        # a wrapper; MPI tests pick their launcher themselves.
+        self.job.launcher = getlauncher(self.launcher)()
 
     @sanity_function
     def assert_number_of_hellos(self):
