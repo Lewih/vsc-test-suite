@@ -45,6 +45,7 @@ Results, logs, and stage files are written to `$VSC_SCRATCH/reframe`.
 | Cluster   | Site       | Config file        |
 |-----------|------------|--------------------|
 | hydra     | VUB        | `sites/brussel.py` |
+| sofia     | VUB        | `sites/brussel.py` |
 | hortense  | UGent      | `sites/gent.py`    |
 | genius    | KULeuven   | `sites/leuven.py`  |
 | wice      | KULeuven   | `sites/leuven.py`  |
@@ -61,6 +62,9 @@ autodetection always picks `genius` (GPU nodes only); use `--system=wice` or
 `--system=mindwell` for the others. With ReFrame >= 4.10 the partitions'
 `sched_options` make job polling (`sacct`) use the right cluster; for older
 versions `run.sh` exports `SLURM_CLUSTERS` for the run instead.
+
+The Tier-1 cluster sofia needs a compute project on every job; the account is
+not hard-coded, so pass it on the command line: `./run.sh -J '-A <project>'`.
 
 ## Feature flags
 
@@ -143,5 +147,7 @@ Each partition declares:
 - `extras['num_cpus']` — cores available per node (used by tests instead of
   hard-coded site values)
 - `extras['num_gpus']` — GPUs per node (GPU partitions only)
+- `extras['cpus_per_gpu']` — cores a job must request per GPU where the site
+  enforces a fixed ratio (e.g. 24 on sofia `zen4_h200`; default 1)
 - `extras['mpi_launcher']` — launcher used by MPI tests (default `srun`;
   e.g. `mpirun` on KU Leuven, whose Slurm has no PMI support)

@@ -10,8 +10,8 @@ Files are named after the **city** of the university operating the cluster.
 
 | File | University | Clusters |
 |---|---|---|
-| `brussel.py` | VUB | Hydra |
-| `gent.py` | UGent | Hortense |
+| `brussel.py` | VUB | Hydra, sofia (Tier-1) |
+| `gent.py` | UGent | Hortense (Tier-1)|
 | `leuven.py` | KU Leuven | Genius, wICE, Mindwell |
 | `antwerp.py` | UA (calcua) | Vaughan, Leibniz, Breniac |
 

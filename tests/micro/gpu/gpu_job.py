@@ -12,6 +12,8 @@ class GPUJobBase(rfm.RunOnlyRegressionTest):
     @run_before('run')
     def request_one_gpu(self):
         self.extra_resources = {'gpu': {'num_gpus': '1'}}
+        # Some sites enforce a fixed core-to-GPU ratio (sofia zen4_h200: 24),
+        self.num_cpus_per_task = self.current_partition.extras.get('cpus_per_gpu', 1)
 
 
 @rfm.simple_test
