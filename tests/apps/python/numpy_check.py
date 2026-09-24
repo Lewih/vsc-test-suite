@@ -4,14 +4,26 @@ import reframe.utility.sanity as sn
 
 @rfm.simple_test
 class NumpyTest(rfm.RunOnlyRegressionTest):
-    def __init__(self):
-        self.descr = 'Test a few typical numpy operations'
-        self.valid_systems = ['+cpu +default']
-        # SciPy-bundle is part of the foss toolchain
-        self.valid_prog_environs = ['+default']
-        self.modules = ['SciPy-bundle']
-        self.time_limit = '20m'
+    # class-level so that -S valid_systems/valid_prog_environs=... can override them
+    valid_systems = ['+cpu +default']
+    # SciPy-bundle is part of the foss toolchain
+    valid_prog_environs = ['+default']
+    # module under test; override with
+    # -P NumpyTest.version=SciPy-bundle/2025.06-gfbf-2025a
+    version = parameter(['SciPy-bundle'], type=str)
+    descr = 'Test a few typical numpy operations'
+    executable = 'python3'
+    executable_opts = ['np_ops.py']
+    time_limit = '20m'
+    tags = {'apps', 'python', 'numpy', 'performance', 'vsc'}
+    maintainers = ['Lewih']
 
+    @run_after('init')
+    def set_module(self):
+        self.modules = [self.version]
+
+    @run_after('init')
+    def set_perf_patterns(self):
         self.perf_patterns = {
             'dot': sn.extractsingle(
                 r'^Dotted two \S* matrices in\s+(?P<dot>\S+)\s+s',
@@ -32,13 +44,6 @@ class NumpyTest(rfm.RunOnlyRegressionTest):
                 self.stdout, 'inv', float),
         }
 
-        self.sanity_patterns = sn.assert_found(r'Numpy version:\s+\S+',
-                                               self.stdout)
-        self.executable = 'python3'
-        self.executable_opts = ['np_ops.py']
-        self.tags = {'apps', 'python', 'numpy', 'performance', 'vsc'}
-        self.maintainers = ['Lewih']
-
     @run_after('setup')
     def set_num_cpus(self):
         # cap the threading at 6 cores; the test is not designed to scale past that
@@ -49,3 +54,7 @@ class NumpyTest(rfm.RunOnlyRegressionTest):
             'MKL_NUM_THREADS': str(ncpus),
         }
         self.job.options = ['--exclusive']
+
+    @sanity_function
+    def assert_numpy(self):
+        return sn.assert_found(r'Numpy version:\s+\S+', self.stdout)

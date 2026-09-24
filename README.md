@@ -4,7 +4,7 @@ ReFrame test suite for VSC (Flemish Supercomputer Centre) clusters.
 
 ## Requirements
 
-- ReFrame ≥ 4.6 available as a module (e.g. `module load ReFrame`)
+- ReFrame ≥ 4.9 available as a module (e.g. `module load ReFrame`)
 - archspec available as a module
 - Python 3
 
@@ -112,6 +112,17 @@ valid_prog_environs = ['+foss +mpi']
 valid_systems = ['+gpu +nvidia']
 valid_prog_environs = ['+cuda']
 ```
+
+## Application versions
+
+The application tests load their site's default module (`NAMD`, `Julia`,
+`MATLAB`, `SciPy-bundle`). Test another build with `-P`:
+
+```bash
+./run.sh -n Namd_CPUTest -P Namd_CPUTest.version=NAMD/3.0-foss-2024a-mpi
+```
+
+Test classes: `Namd_CPUTest`, `JuliaLinalgTest`, `MatlabLinalgTest`, `NumpyTest`.
 
 ## Test layout
 

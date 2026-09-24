@@ -5,18 +5,21 @@ from reframe.core.backends import getlauncher
 
 class NamdBaseTest(rfm.RunOnlyRegressionTest):
     # This test assumes NAMD3, MPI build, is the default version
-    num_nodes = parameter([1, 2, 4])
+    num_nodes = parameter([1, 2, 4], type=int)
+    # module under test; override with
+    # -P Namd_CPUTest.version=NAMD/3.0-foss-2024a-mpi
+    version = parameter(['NAMD'], type=str)
+    time_limit = '20m'
+    tags = {'apps', 'namd', 'performance', 'vsc'}
+    maintainers = ['Lewih']
 
-    def __init__(self, arch):
-        self.descr = (
-            f'NAMD check on {arch}, number of nodes: {self.num_nodes}, '
-            f'apoa1 and stmv (4 nodes only)'
-        )
-        self.modules = ['NAMD']
+    @run_after('init')
+    def set_module(self):
+        self.modules = [self.version]
+        self.tags = self.tags | {f'{self.num_nodes}nodes'}
 
-        self.sanity_patterns = sn.assert_found(
-            r'WRITING EXTENDED SYSTEM TO OUTPUT FILE AT STEP', self.stdout,
-        )
+    @run_after('init')
+    def set_perf_patterns(self):
         self.perf_patterns = {
             'days_ns': sn.avg(sn.extractall(
                 r'Info: Benchmark time: \S+ CPUs \S+ '
@@ -24,11 +27,6 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
                 self.stdout, 'days_ns', float,
             ))
         }
-
-        self.maintainers = ['Lewih']
-
-        self.tags = {'apps', 'namd', 'performance', 'vsc'}
-        self.tags.add(f'{self.num_nodes}nodes')
 
     @run_before('run')
     def replace_launcher(self):
@@ -50,17 +48,26 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
             ]
             return 'stmv'
 
+    @sanity_function
+    def assert_namd(self):
+        return sn.assert_found(
+            r'WRITING EXTENDED SYSTEM TO OUTPUT FILE AT STEP', self.stdout,
+        )
+
 
 @rfm.simple_test
 class Namd_CPUTest(NamdBaseTest):
     # NAMD non-SMP CPU test
+    # class-level so that -S valid_systems/valid_prog_environs=... can override them
+    valid_systems = ['+cpu +default']
+    valid_prog_environs = ['+default']
 
-    def __init__(self):
-        self.time_limit = '20m'
-
-        self.valid_systems = ['+cpu +default']
-        self.valid_prog_environs = ['+default']
-        super().__init__('cpu')
+    @run_after('init')
+    def set_descr(self):
+        self.descr = (
+            f'NAMD check on cpu, number of nodes: {self.num_nodes}, '
+            f'apoa1 and stmv (4 nodes only)'
+        )
 
     @run_after('setup')
     def set_num_cpus(self):

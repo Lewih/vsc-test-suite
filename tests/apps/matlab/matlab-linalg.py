@@ -7,11 +7,25 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 
 
-class MatlabLinalgBaseTest(rfm.RunOnlyRegressionTest):
-    def __init__(self):
-        self.valid_prog_environs = ['+default']
-        self.modules = ['MATLAB']
+@rfm.simple_test
+class MatlabLinalgTest(rfm.RunOnlyRegressionTest):
+    # class-level so that -S valid_systems/valid_prog_environs=... can override them
+    valid_systems = ['+cpu +default']
+    valid_prog_environs = ['+default']
+    # module under test; override with -P MatlabLinalgTest.version=MATLAB/2024b
+    version = parameter(['MATLAB'], type=str)
+    executable = 'cat'
+    executable_opts = ['linalg.m | matlab -nodesktop -nosplash']
+    num_tasks_per_node = 1
+    tags = {'apps', 'matlab', 'performance', 'vsc'}
+    maintainers = ['Lewih']
 
+    @run_after('init')
+    def set_module(self):
+        self.modules = [self.version]
+
+    @run_after('init')
+    def set_perf_patterns(self):
         self.perf_patterns = {
             'dot': sn.extractsingle(
                 r'Dot product:\s+(?P<dot>\S+)\s+s',
@@ -25,27 +39,18 @@ class MatlabLinalgBaseTest(rfm.RunOnlyRegressionTest):
                 r'\s+(?P<lu>\S+)\s+s',
                 self.stdout, 'lu', float),
         }
-        self.sanity_patterns = sn.assert_found(r'MATLAB Version: *',
-                                               self.stdout)
-        self.executable = 'cat'
-        self.executable_opts = ['linalg.m | matlab -nodesktop -nosplash']
-        self.num_tasks_per_node = 1
-        self.tags = {'apps', 'matlab', 'performance', 'vsc'}
-        self.maintainers = ['Lewih']
-
-
-@rfm.simple_test
-class MatlabLinalgTest(MatlabLinalgBaseTest):
-    def __init__(self):
-        super().__init__()
-        self.valid_systems = ['+cpu +default']
 
     @run_after('setup')
     def set_num_cpus(self):
-        # cap the threading at 32 cores
+        # cap the threading at 32 cores; MATLAB's implicit parallelism does
+        # not scale past that and the big nodes have far more
         self.num_cpus_per_task = min(32, self.current_partition.extras['num_cpus'])
         self.job.options = ['--exclusive']
         self.descr = (
             f'Test a few typical Matlab operations, '
             f'cpus={self.num_cpus_per_task}'
         )
+
+    @sanity_function
+    def assert_matlab(self):
+        return sn.assert_found(r'MATLAB Version: *', self.stdout)
