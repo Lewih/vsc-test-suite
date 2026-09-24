@@ -10,10 +10,11 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
     env_vars = {'CUDAPATH': '$EBROOTCUDA'}
     time_limit = '10m'
     modules = ['git']
+    # Ask the node which architecture it is (V100 7.0, A100 8.0, H100/H200 9.0).
     prerun_cmds = [
         'git clone https://github.com/wilicc/gpu-burn.git',
         'cd gpu-burn',
-        'make',
+        'make COMPUTE=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -1)',
     ]
     executable = 'srun --output=rfm_GPUBURN_nvidia_node-%N.out ./gpu_burn 20'
     tags = {'gpu', 'burn', 'performance', 'vsc'}
