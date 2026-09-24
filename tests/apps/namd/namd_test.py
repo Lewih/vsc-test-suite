@@ -6,16 +6,13 @@ from reframe.core.backends import getlauncher
 class NamdBaseTest(rfm.RunOnlyRegressionTest):
     # This test assumes NAMD3, MPI build, is the default version
     num_nodes = parameter([1, 2, 4], type=int)
-    # module under test; override with
-    # -P Namd_CPUTest.version=NAMD/3.0-foss-2024a-mpi
-    version = parameter(['NAMD'], type=str)
+    modules = ['NAMD']
     time_limit = '20m'
     tags = {'apps', 'namd', 'performance', 'vsc'}
     maintainers = ['Lewih']
 
     @run_after('init')
-    def set_module(self):
-        self.modules = [self.version]
+    def set_tags(self):
         self.tags = self.tags | {f'{self.num_nodes}nodes'}
 
     @run_after('init')
@@ -57,7 +54,6 @@ class NamdBaseTest(rfm.RunOnlyRegressionTest):
 
 @rfm.simple_test
 class Namd_CPUTest(NamdBaseTest):
-    # NAMD non-SMP CPU test
     # class-level so that -S valid_systems/valid_prog_environs=... can override them
     valid_systems = ['+cpu +default']
     valid_prog_environs = ['+default']

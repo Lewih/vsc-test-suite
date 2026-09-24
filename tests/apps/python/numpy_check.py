@@ -6,21 +6,14 @@ import reframe.utility.sanity as sn
 class NumpyTest(rfm.RunOnlyRegressionTest):
     # class-level so that -S valid_systems/valid_prog_environs=... can override them
     valid_systems = ['+cpu +default']
-    # SciPy-bundle is part of the foss toolchain
     valid_prog_environs = ['+default']
-    # module under test; override with
-    # -P NumpyTest.version=SciPy-bundle/2025.06-gfbf-2025a
-    version = parameter(['SciPy-bundle'], type=str)
+    modules = ['SciPy-bundle']
     descr = 'Test a few typical numpy operations'
     executable = 'python3'
     executable_opts = ['np_ops.py']
     time_limit = '20m'
     tags = {'apps', 'python', 'numpy', 'performance', 'vsc'}
     maintainers = ['Lewih']
-
-    @run_after('init')
-    def set_module(self):
-        self.modules = [self.version]
 
     @run_after('init')
     def set_perf_patterns(self):

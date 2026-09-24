@@ -4,7 +4,7 @@ ReFrame test suite for VSC (Flemish Supercomputer Centre) clusters.
 
 ## Requirements
 
-- ReFrame ≥ 4.9 available as a module (e.g. `module load ReFrame`)
+- ReFrame ≥ 4.6 available as a module (e.g. `module load ReFrame`)
 - archspec available as a module
 - Python 3
 
@@ -32,9 +32,22 @@ Examples:
 # Run tests tagged 'cue' and not tagged 'amd' on a specific system
 ./run.sh -t cue -T amd
 
-# Run only MPI tests
-./run.sh --system=vsc_generic:mpi-job
+# Run only the MPI tests
+./run.sh -t mpi
+
+# Run a test on a partition it is not normally valid for
+./run.sh --system=hydra:zen5_himem -n JuliaLinalgTest -S valid_systems='+cpu'
 ```
+
+`-S [TEST.]VAR=VAL` overrides a test variable, `-S TEST.VAR=VAL` only for that
+test. It is applied before the test is created, so it works for anything the
+test declares at class level — `valid_systems`, `valid_prog_environs`,
+`num_tasks`, `time_limit` — but not for values a hook computes at run time,
+such as `num_cpus_per_task` in the application tests.
+
+Name the partition with `--system` when widening `valid_systems`: on its own,
+`-S valid_systems='+cpu'` selects every CPU partition, which on some sites
+includes the login node.
 
 ## Output location
 
@@ -115,14 +128,19 @@ valid_prog_environs = ['+cuda']
 
 ## Application versions
 
-The application tests load their site's default module (`NAMD`, `Julia`,
-`MATLAB`, `SciPy-bundle`). Test another build with `-P`:
+Tests load their site's default module (`NAMD`, `Julia`, `MATLAB`,
+`SciPy-bundle`, `CUDA`, ...). To test another build, map the module with
+`-M`:
 
 ```bash
-./run.sh -n Namd_CPUTest -P Namd_CPUTest.version=NAMD/3.0-foss-2024a-mpi
+./run.sh -n NAMD -M 'NAMD:NAMD/3.0-foss-2024a-mpi'
+./run.sh -M 'CUDA/12.8.0:CUDA/12.6.0' -t gpu
 ```
 
-Test classes: `Namd_CPUTest`, `JuliaLinalgTest`, `MatlabLinalgTest`, `NumpyTest`.
+ReFrame substitutes the module when it writes the job script, so this works
+for every module in every test, not just the application ones, and the suite
+stays free of site-specific version strings. One mapping applies to the whole
+run; repeat the flag for several modules, or use `--module-mappings FILE`.
 
 ## Test layout
 

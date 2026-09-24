@@ -12,17 +12,12 @@ class MatlabLinalgTest(rfm.RunOnlyRegressionTest):
     # class-level so that -S valid_systems/valid_prog_environs=... can override them
     valid_systems = ['+cpu +default']
     valid_prog_environs = ['+default']
-    # module under test; override with -P MatlabLinalgTest.version=MATLAB/2024b
-    version = parameter(['MATLAB'], type=str)
+    modules = ['MATLAB']
     executable = 'cat'
     executable_opts = ['linalg.m | matlab -nodesktop -nosplash']
     num_tasks_per_node = 1
     tags = {'apps', 'matlab', 'performance', 'vsc'}
     maintainers = ['Lewih']
-
-    @run_after('init')
-    def set_module(self):
-        self.modules = [self.version]
 
     @run_after('init')
     def set_perf_patterns(self):

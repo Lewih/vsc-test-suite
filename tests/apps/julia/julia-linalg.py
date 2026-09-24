@@ -7,8 +7,7 @@ class JuliaLinalgTest(rfm.RunOnlyRegressionTest):
     # class-level so that -S valid_systems/valid_prog_environs=... can override them
     valid_systems = ['+cpu +default']
     valid_prog_environs = ['+default']
-    # module under test; override with -P JuliaLinalgTest.version=Julia/1.11.1
-    version = parameter(['Julia'], type=str)
+    modules = ['Julia']
     descr = 'Test a few typical Julia LinAlg operations'
     executable = 'julia'
     executable_opts = ['linalg.jl']
@@ -16,10 +15,6 @@ class JuliaLinalgTest(rfm.RunOnlyRegressionTest):
     time_limit = '10m'
     tags = {'apps', 'julia', '1nodes', 'performance', 'vsc'}
     maintainers = ['Lewih']
-
-    @run_after('init')
-    def set_module(self):
-        self.modules = [self.version]
 
     @run_after('init')
     def set_perf_patterns(self):
