@@ -5,7 +5,7 @@ from reframe.core.backends import getlauncher
 
 class NamdBaseTest(rfm.RunOnlyRegressionTest):
     # This test assumes NAMD3, MPI build, is the default version
-    num_nodes = parameter([1, 2, 4], type=int)
+    num_nodes = parameter([1, 2, 4])
     modules = ['NAMD']
     time_limit = '20m'
     tags = {'apps', 'namd', 'performance', 'vsc'}
