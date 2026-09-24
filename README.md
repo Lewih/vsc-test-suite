@@ -147,7 +147,6 @@ run; repeat the flag for several modules, or use `--module-mappings FILE`.
 ```
 tests/
   apps/
-    gaussian/     Gaussian application test
     julia/        Julia linear algebra benchmark
     matlab/       MATLAB linear algebra benchmark
     namd/         NAMD MD simulation (multi-node MPI)
