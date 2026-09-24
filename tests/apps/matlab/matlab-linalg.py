@@ -42,7 +42,8 @@ class MatlabLinalgTest(MatlabLinalgBaseTest):
 
     @run_after('setup')
     def set_num_cpus(self):
-        self.num_cpus_per_task = self.current_partition.extras['num_cpus']
+        # cap the threading at 32 cores
+        self.num_cpus_per_task = min(32, self.current_partition.extras['num_cpus'])
         self.job.options = ['--exclusive']
         self.descr = (
             f'Test a few typical Matlab operations, '
