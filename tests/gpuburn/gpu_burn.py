@@ -13,6 +13,7 @@ class GPU_Burn_nvidia(rfm.RunOnlyRegressionTest):
     # Ask the node which architecture it is (V100 7.0, A100 8.0, H100/H200 9.0).
     prerun_cmds = [
         'git clone https://github.com/wilicc/gpu-burn.git',
+        'module unload git',   # its GCCcore could be newer than 14 and be not compatible with CUDA
         'cd gpu-burn',
         'make COMPUTE=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -1)',
     ]
